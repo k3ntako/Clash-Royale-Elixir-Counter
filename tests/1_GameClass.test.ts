@@ -1,4 +1,4 @@
-import Game from '../index';
+import Game from '../models/Game';
 import {assert} from 'chai';
 
 describe('Fundamentals', (): void => {
