@@ -12,12 +12,14 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@types/node": "^12.12.6"
+    "@types/node": "^12.12.6",
+    "dotenv": "^8.2.0"
   },
   "devDependencies": {
     "@types/chai": "^4.2.4",
     "@types/mocha": "^5.2.7",
     "chai": "^4.2.0",
+    "chai-spies": "^1.0.0",
     "ts-mocha": "^6.0.0",
     "typescript": "^3.7.2"
   }

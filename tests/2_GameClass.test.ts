@@ -1,8 +1,8 @@
 import Game from '../models/Game';
 import { assert } from 'chai';
 
-describe('Timer', (): void => {
-  describe('Game class', (): void => {
+describe('Game class', (): void => {
+  describe('Timer', (): void => {
     it('should have a field called timer that is initiated as null', (): void => {
       const game = new Game();
       assert.strictEqual(game.timer, null);
@@ -40,20 +40,20 @@ describe('Timer', (): void => {
       game.stop();
     });
 
-    it('should add one elixir every 2.8 seconds when start is called', (done: Mocha.Done) => {
-      const game = new Game();
-      game.start();
+    // it('should add one elixir every 2.8 seconds when start is called', (done: Mocha.Done) => {
+    //   const game = new Game();
+    //   game.start();
 
-      setTimeout((): void => {
-        assert.strictEqual(game.getElixir(), 1);
+    //   setTimeout((): void => {
+    //     assert.strictEqual(game.getElixir(), 1);
 
-        setTimeout((): void => {
-          assert.strictEqual(game.getElixir(), 2);
-          game.stop();
-          done();
-        }, 2900);
+    //     setTimeout((): void => {
+    //       assert.strictEqual(game.getElixir(), 2);
+    //       game.stop();
+    //       done();
+    //     }, 2900);
 
-      }, 2900);
-    }).timeout(6500); // extends timeout from 2000ms (default) to 6500 ms
+    //   }, 2900);
+    // }).timeout(6500); // extends timeout from 2000ms (default) to 6500 ms
   });
 });

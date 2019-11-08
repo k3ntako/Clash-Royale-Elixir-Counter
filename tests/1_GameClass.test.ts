@@ -1,8 +1,8 @@
 import Game from '../models/Game';
 import {assert} from 'chai';
 
-describe('Fundamentals', (): void => {
-  describe('Game class', (): void => {
+describe('Game class', (): void => {
+  describe('Fundamentals', (): void => {
     it('should be a function (JS classes are special functions)', (): void => {
       assert.strictEqual(typeof Game, 'function');
     });
