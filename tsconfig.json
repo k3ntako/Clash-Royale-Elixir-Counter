@@ -12,7 +12,8 @@
     "types": [
       "node",
       "mocha",
-      "chai"
+      "chai",
+      "chai-spies"
     ]
   }
 }
