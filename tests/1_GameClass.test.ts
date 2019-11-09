@@ -1,5 +1,17 @@
 import Game from '../models/Game';
 import {assert} from 'chai';
+import { ICardInfoResponse } from '../utilities/interfaces';
+
+const knightCard: ICardInfoResponse = {
+  "key": "knight",
+  "name": "Knight",
+  "elixir": 3,
+  "type": "Troop",
+  "rarity": "Common",
+  "arena": 0,
+  "description": "A tough melee fighter. The Barbarian's handsome, cultured cousin. Rumor has it that he was knighted based on the sheer awesomeness of his mustache alone.",
+  "id": 26000000
+}
 
 describe('Game class', (): void => {
   describe('Fundamentals', (): void => {
@@ -87,6 +99,20 @@ describe('Game class', (): void => {
     it('should have a method called playCard', (): void => {
       const game = new Game();
       assert.strictEqual(typeof game.playCard, 'function');
+    });
+
+    it('given an object with field "elixir", playCard() should subtract that from game.elixir', (): void => {
+      const game = new Game();
+      game.setElixir(4)
+      game.playCard(knightCard)
+      assert.strictEqual(game.getElixir(), 1);
+    });
+
+    it('playCard should not subtract any elixir if game.elixir is less than the elixir count provided', (): void => {
+      const game = new Game();
+      game.setElixir(2)
+      game.playCard(knightCard)
+      assert.strictEqual(game.getElixir(), 2);
     });
   });
 });

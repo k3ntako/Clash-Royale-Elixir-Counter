@@ -1,3 +1,5 @@
+import { ICardInfoResponse } from '../utilities/interfaces';
+
 export default class Game {
   elixir: number;
   timer: NodeJS.Timeout | null;
@@ -29,8 +31,10 @@ export default class Game {
     this.addElixir(-1 * elixir);
   }
 
-  playCard(): void {
-
+  playCard(card: ICardInfoResponse): void {
+    if( this.elixir >= card.elixir) {
+      this.elixir -= card.elixir;
+    }
   }
 
   start(): void{
