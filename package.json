@@ -2,26 +2,41 @@
   "name": "clash_royale_elixir_count",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "private": true,
   "directories": {
     "test": "test"
   },
   "scripts": {
-    "test": "./node_modules/ts-mocha/bin/ts-mocha -p ./tsconfig.json ./**/*.test.ts -w --watch-extensions ts"
+    "start": "concurrently --raw \"webpack --mode=development --watch\" \"NODE_ENV=development node server/index.ts\"",
+    "build": "webpack -p",
+    "test": "ts-mocha -p ./tsconfig.json ./**/tests/*.test.ts -w --watch-extensions ts",
+    "test-nw": "concurrently \"npm run selenium-start\" \"npm run nightwatch-start\"",
+    "selenium-start": "selenium-standalone start",
+    "nightwatch-start": "wait-port localhost:4444 && nightwatch ./tests/**.nw.test.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@types/node": "^12.12.6",
-    "dotenv": "^8.2.0"
+    "concurrently": "^5.0.0",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "ts-loader": "^6.2.1",
+    "wait-port": "^0.2.6"
   },
   "devDependencies": {
     "@types/chai": "^4.2.4",
     "@types/chai-spies": "^1.0.1",
+    "@types/express": "^4.17.2",
     "@types/mocha": "^5.2.7",
     "chai": "^4.2.0",
     "chai-spies": "^1.0.0",
+    "chromedriver": "^78.0.1",
+    "nightwatch": "^1.2.4",
+    "selenium-standalone": "^6.16.0",
     "ts-mocha": "^6.0.0",
-    "typescript": "^3.7.2"
+    "typescript": "^3.7.2",
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.10"
   }
 }

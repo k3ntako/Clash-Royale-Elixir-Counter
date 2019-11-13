@@ -1,9 +1,9 @@
-import Cards from '../models/Cards';
+import Cards from '../src/models/Cards';
 import chai, { assert, expect } from 'chai';
 import spies from 'chai-spies';
 chai.use(spies);
 import fs from 'fs';
-import { ICardInfoResponse } from '../utilities/interfaces';
+import { ICardInfoResponse } from '../src/utilities/interfaces';
 
 const testOutputDir = './tests/cards.json';
 

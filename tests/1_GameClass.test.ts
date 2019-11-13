@@ -1,6 +1,6 @@
-import Game from '../models/Game';
+import Game from '../src/models/Game';
 import {assert} from 'chai';
-import { ICardInfoResponse } from '../utilities/interfaces';
+import { ICardInfoResponse } from '../src/utilities/interfaces';
 
 const knightCard: ICardInfoResponse = {
   "key": "knight",

@@ -1,7 +1,8 @@
 {
   "compilerOptions": {
     "lib": [
-      "es6"
+      "es6",
+      "dom"
     ],
     "target": "es6",
     "module": "commonjs",
@@ -13,7 +14,8 @@
       "node",
       "mocha",
       "chai",
-      "chai-spies"
+      "chai-spies",
+      "express"
     ]
   }
 }
