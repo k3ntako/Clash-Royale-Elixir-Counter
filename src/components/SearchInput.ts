@@ -36,19 +36,26 @@ export default class SearchInput extends HTMLElement {
 
     this.attachShadow({ mode: "open" })
     this.render();
-
-    this.onChange = this.onChange.bind(this);
   }
 
-  onChange(e: any){
-    if (!this.parentNode) throw new Error('No parent node');
-    const oldDiv = this.parentNode.querySelector('div');
+  sortSuggestions(a: string, b: string, searchStr: string): number{
+    const aStartsWith = a.toLowerCase().startsWith(searchStr);
+    const bStartsWith = b.toLowerCase().startsWith(searchStr);
+
+    if (aStartsWith && !bStartsWith) return -1;
+    if (!aStartsWith && bStartsWith) return 1;
+    return 0;
+  }
+
+  onChange = (e: any) => {
+    const oldDiv = this.shadowRoot.querySelector('div');
     oldDiv && oldDiv.remove();
 
     this.search = e.target.value.trim();
     this.value = this.search;
     const searchRegex = new RegExp(this.value, "i"); // Case insensitive regex search
     const suggestions = cardNames.filter(name => searchRegex.test(name)).slice(0,10);
+    suggestions.sort((a,b) => this.sortSuggestions(a,b, this.value));
 
     let div = document.createElement("div");;
     suggestions.forEach(suggestion => {
@@ -57,7 +64,7 @@ export default class SearchInput extends HTMLElement {
       div.appendChild(li);
     })
 
-    this.parentNode.appendChild(div)
+    this.shadowRoot.appendChild(div)
   }
 
   render() {

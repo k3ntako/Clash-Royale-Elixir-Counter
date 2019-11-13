@@ -86,6 +86,30 @@ describe('Game class', (): void => {
       assert.strictEqual(cardNames[7], 'Barbarians');
       assert.strictEqual(cardNames[8], 'Bats');
       assert.strictEqual(cardNames[9], 'Battle Ram');
+
+      input.clear();
+    }).timeout(6500);
+
+    it('should should push a result to top if result starts with the query', async (): Promise<void> => {
+      const searchInput = await driver.findElement(By.tagName('search-input'));
+      const input = await findShadowRootElement(searchInput, By.tagName('input'));
+      await input.sendKeys('g');
+
+      const suggestions = await findShadowRootElements(searchInput, By.css('li'));
+
+      const cardNamePromises = suggestions.map(async suggestion => await suggestion.getText());
+      const cardNames = await Promise.all(cardNamePromises);
+
+      assert.strictEqual(cardNames[0], 'Giant');
+      assert.strictEqual(cardNames[1], 'Giant Skeleton');
+      assert.strictEqual(cardNames[2], 'Giant Snowball');
+      assert.strictEqual(cardNames[3], 'Goblin Barrel');
+      assert.strictEqual(cardNames[4], 'Goblin Cage');
+      assert.strictEqual(cardNames[5], 'Baby Dragon');
+      assert.strictEqual(cardNames[6], 'Dart Goblin');
+      assert.strictEqual(cardNames[7], 'Electro Dragon');
+      assert.strictEqual(cardNames[8], 'Elixir Golem');
+      assert.strictEqual(cardNames[9], 'Flying Machine');
     }).timeout(6500);
   });
 });
