@@ -10,9 +10,8 @@
     "start": "concurrently --raw \"webpack --mode=development --watch\" \"NODE_ENV=development node server/index.ts\"",
     "build": "webpack -p",
     "test": "ts-mocha -p ./tsconfig.json ./**/tests/*.test.ts -w --watch-extensions ts",
-    "test-nw": "concurrently \"npm run selenium-start\" \"npm run nightwatch-start\"",
-    "selenium-start": "selenium-standalone start",
-    "nightwatch-start": "wait-port localhost:4444 && nightwatch ./tests/**.nw.test.js"
+    "test-selenium": "concurrently \"selenium-standalone start\" \"npm run test-selenium-tests\"",
+    "test-selenium-tests": "wait-port localhost:4444 && ts-mocha ./tests/**.s.test.ts"
   },
   "author": "",
   "license": "ISC",
@@ -32,8 +31,8 @@
     "chai": "^4.2.0",
     "chai-spies": "^1.0.0",
     "chromedriver": "^78.0.1",
-    "nightwatch": "^1.2.4",
     "selenium-standalone": "^6.16.0",
+    "selenium-webdriver": "^4.0.0-alpha.5",
     "ts-mocha": "^6.0.0",
     "typescript": "^3.7.2",
     "webpack": "^4.41.2",

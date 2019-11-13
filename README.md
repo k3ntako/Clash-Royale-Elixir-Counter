@@ -1,7 +1,7 @@
 # Clash Royale Elixir Counter
 [Clash Royale](https://clashroyale.com/) is a mobile game where users collect cards and use them to battle other players online. Each card in the game is assigned a cost, which represents the amount of elixir required to play that card. Users will acquire one elixir every 2.8 seconds in standard play. This app tries to count the number of elixir the opponent has to better coordinate the user's attack.
 
-This was built using TDD and Typescript, and without heavy frameworks such as React and Vue. Mocha, Chai, Selenium, and NightWatch were used to test this program.
+This was built using TDD and Typescript, and without heavy frameworks such as React and Vue. Mocha, Chai, and Selenium were used to test this program. I was inspired by this [article](https://blog.bitsrc.io/can-you-build-web-apps-in-2019-without-a-framework-1065ad82b79f) to build a website and limit the number of libraries outside of testing and Typescript.
 
 ## Getting Started
 1. Clone repository
@@ -40,7 +40,15 @@ This was built using TDD and Typescript, and without heavy frameworks such as Re
   $ npm test && npm test-nw
 ```
 
-## Why Selenium and NightWatch?
+## Why Selenium?
 -  JSDOM does not support [Web Components](https://developer.mozilla.org/en-US/docs/Web/Web_Components), so it's not easily possible to test this website using JSDOM. More on this issue [here](https://github.com/jsdom/jsdom/issues/1030).
   - Selenium replies on browser, so it can test on modern browsers without worrying about continued support.
-- "Karma has primarily been designed for low level (unit) testing." As mentioned on their [FAQ](http://karma-runner.github.io/4.0/intro/faq.html) Karma is built more for unit testing opposed to acceptance testing. I wanted the ability to work on a higher level and chose to go with [NightWatch](https://nightwatchjs.org/).
+- "Karma has primarily been designed for low level (unit) testing." As mentioned on their [FAQ](http://karma-runner.github.io/4.0/intro/faq.html) Karma is built more for unit testing opposed to acceptance testing.
+- Initially, I wanted to work with NightWatch, however, they do not support Shadow DOM.
+  - As mentionned above, Selenium is able to render Shadow DOMs unlike JSDOM, but like NightWatch, it also does not support querying Shadow DOM elements (i.e., WebElement.element() will not return elements in the Shadow DOM).
+  - After finding this wonderful [article](https://medium.com/rate-engineering/a-guide-to-working-with-shadow-dom-using-selenium-b124992559f) with a method to work around this issue, I figured that NightWatch was an unnecessary extra layer.
+
+## Documentation of Testing Libraries
+- [mocha](https://mochajs.org/) - Mocha is a Javascript test runner.
+- [chai](https://www.chaijs.com/guide/) - Chai is a BDD/TDD assertion library.
+- [selenium-webdriver](https://selenium.dev/selenium/docs/api/javascript/index.html) - Selenium is a browser automation library.
