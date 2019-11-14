@@ -1,5 +1,7 @@
-import Game from '../src/models/Game';
-import { assert } from 'chai';
+import Game from '../../src/models/Game';
+import chai, { assert, expect } from 'chai';
+import spies from 'chai-spies';
+chai.use(spies);
 
 describe('Game class', (): void => {
   describe('Timer', (): void => {
@@ -49,6 +51,29 @@ describe('Game class', (): void => {
 
         setTimeout((): void => {
           assert.strictEqual(game.getElixir(), 2);
+          game.stop();
+          done();
+        }, 2900);
+
+      }, 2900);
+    }).timeout(6500); // extends timeout from 2000ms (default) to 6500 ms
+
+    it('start() should take a callback that is called when elixir count changes', (done: Mocha.Done) => {
+      const game = new Game();
+      let elixir = 0;
+      const onChange = (newElixir) => {
+        elixir = newElixir;
+      }
+
+      const onChangeSpy = chai.spy(onChange);
+      game.start(onChangeSpy);
+
+      setTimeout((): void => {
+        expect(onChangeSpy).to.have.been.called();
+        assert.strictEqual(elixir, 1);
+
+        setTimeout((): void => {
+          assert.strictEqual(elixir, 2);
           game.stop();
           done();
         }, 2900);

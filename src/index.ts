@@ -1,4 +1,5 @@
 import SearchInput from './components/SearchInput';
-import HelloWorld from './components/HelloWorld';
+import ElixirCounter from './components/ElixirCounter';
 
 window.customElements.define('search-input', SearchInput);
+window.customElements.define('elixir-counter', ElixirCounter);

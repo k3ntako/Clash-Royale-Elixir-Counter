@@ -28,27 +28,29 @@ This was built using TDD and Typescript, and without heavy frameworks such as Re
     ROYALE_API_KEY=MY_API_KEY
   ```
 
-5. Get the location of your `index.html` file
-  - Open `index.html` in a browser (e.g., Chrome), and copy the address in the URL bar. Add it to the `.env` file that you created in the previous step as `INDEX_URL`. Your file should look something like this:
-  ```
-    ROYALE_API_KEY=MY_API_KEY
-    INDEX_URL=file:///Users/MyName/Desktop/Projects/Clash-Royale-Elixir-Counter/index.html
-  ```
-
-6. Start the tests
+5. Start the tests
 ```
   $ npm test && npm test-nw
 ```
 
 ## Why Selenium?
--  JSDOM does not support [Web Components](https://developer.mozilla.org/en-US/docs/Web/Web_Components), so it's not easily possible to test this website using JSDOM. More on this issue [here](https://github.com/jsdom/jsdom/issues/1030).
+-  JSDOM does not support [web components](https://developer.mozilla.org/en-US/docs/Web/Web_Components), so it's not easily possible to test this website using JSDOM. More on this issue [here](https://github.com/jsdom/jsdom/issues/1030).
   - Selenium replies on browser, so it can test on modern browsers without worrying about continued support.
 - "Karma has primarily been designed for low level (unit) testing." As mentioned on their [FAQ](http://karma-runner.github.io/4.0/intro/faq.html) Karma is built more for unit testing opposed to acceptance testing.
 - Initially, I wanted to work with NightWatch, however, they do not support Shadow DOM.
   - As mentionned above, Selenium is able to render Shadow DOMs unlike JSDOM, but like NightWatch, it also does not support querying Shadow DOM elements (i.e., WebElement.element() will not return elements in the Shadow DOM).
   - After finding this wonderful [article](https://medium.com/rate-engineering/a-guide-to-working-with-shadow-dom-using-selenium-b124992559f) with a method to work around this issue, I figured that NightWatch was an unnecessary extra layer.
 
-## Documentation of Testing Libraries
-- [mocha](https://mochajs.org/) - Mocha is a Javascript test runner.
-- [chai](https://www.chaijs.com/guide/) - Chai is a BDD/TDD assertion library.
-- [selenium-webdriver](https://selenium.dev/selenium/docs/api/javascript/index.html) - Selenium is a browser automation library.
+## Resources
+- [Mocha documentation](https://mochajs.org/) - Mocha is a Javascript test runner.
+- [Chai documentation](https://www.chaijs.com/guide/) - Chai is a BDD/TDD assertion library.
+- [selenium-webdriver documentation](https://selenium.dev/selenium/docs/api/javascript/index.html) - Selenium is a browser automation library.
+- [Building Components](https://developers.google.com/web/fundamentals/web-components) - A collection of articles by Google on building web components.
+  - [Shadow DOM v1: Self-Contained Web Components](https://developers.google.com/web/fundamentals/web-components/shadowdom)
+
+
+## Other Notes
+### Pros and Cons of Shadow DOM
+Shadow DOM offers isolation from the rest of the DOM. This can be beneficial for having scoped CSS, so that the developer does not have to worry about clashes in IDs and class names. This also means that the developer can query using a class, and/or a tag name without getting a long list of results. This allows the developer to build components and think about it in compartments instead of dealing  with  the whole webpage at a time.
+
+However this has its drawbacks as well. web components are relatively new and many libraries including JSDOM, Selenium, and NightWatch do not support it. Additionally, querying an element takes two steps: 1) finding the component and 2) finding  the element inside the component.

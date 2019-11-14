@@ -1,31 +1,8 @@
-const {Builder, By} = require('selenium-webdriver');
-const driver = new Builder()
-  .forBrowser('chrome')
-  .build();
-
-const getShadowRoot = async (elem) => {
-  return await driver.executeScript("return arguments[0].shadowRoot", elem);
-}
-const findShadowRootElements = async (elem, locator): Promise<Array<any>> => {
-  const shadowRoot = await getShadowRoot(elem);
-  return await shadowRoot.findElements(locator);
-}
-const findShadowRootElement = async (elem, locator) => {
-  return (await findShadowRootElements(elem, locator))[0];
-}
-
+const { Builder, By } = require('selenium-webdriver');
 import { assert } from 'chai';
 
 describe('Game class', (): void => {
   describe('Timer', (): void => {
-    before(async (): Promise<void> => {
-      await driver.get('http://localhost:3000');
-    });
-
-    after(async (): Promise<void> => {
-      await driver.quit();
-    });
-
     it('should have website title', async (): Promise<void> => {
       const websiteTitle = await driver.findElement(By.tagName('h1'));
       const websiteTitleText = await websiteTitle.getText();
