@@ -53,4 +53,4 @@ This was built using TDD and Typescript, and without heavy frameworks such as Re
 ### Pros and Cons of Shadow DOM
 Shadow DOM offers isolation from the rest of the DOM. This can be beneficial for having scoped CSS, so that the developer does not have to worry about clashes in IDs and class names. This also means that the developer can query using a class, and/or a tag name without getting a long list of results. This allows the developer to build components and think about it in compartments instead of dealing  with  the whole webpage at a time.
 
-However this has its drawbacks as well. web components are relatively new and many libraries including JSDOM, Selenium, and NightWatch do not support it. Additionally, querying an element takes two steps: 1) finding the component and 2) finding  the element inside the component.
+However this has its drawbacks as well. Web components are relatively new and many libraries including JSDOM, Selenium, and NightWatch do not support it. Additionally, querying an element takes two steps: 1) finding the component and 2) finding  the element inside the component.
