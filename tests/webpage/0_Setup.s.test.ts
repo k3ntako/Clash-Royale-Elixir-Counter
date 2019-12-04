@@ -10,7 +10,7 @@ const findShadowRootElements = async (elem, locator): Promise<Array<any>> => {
   const shadowRoot = await getShadowRoot(elem);
   return await shadowRoot.findElements(locator);
 }
-const findShadowRootElement = async (elem, locator) => {
+const findShadowRootElement = async (elem, locator): Promise<any> => {
   return (await findShadowRootElements(elem, locator))[0];
 }
 

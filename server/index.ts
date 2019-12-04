@@ -1,11 +1,18 @@
 const express = require('express');
 const path = require('path');
+const CardsController = require('./controllers/CardsController.ts');
 
 // Express Setup
 const app = express();
 
 // Static Files
 app.use('/', express.static('public'));
+
+// API
+let router = express.Router();
+router.get('/api/cards', CardsController.all);
+app.use(router);
+
 
 // Error Handling
 app.use((err, req, res, next) => {

@@ -2,3 +2,5 @@
 .env
 selenium-server.log
 main.js
+cards.json
+test_cards.json

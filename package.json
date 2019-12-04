@@ -9,14 +9,14 @@
   "scripts": {
     "start": "concurrently --raw \"webpack --mode=development --watch\" \"NODE_ENV=development node server/index.ts\"",
     "build": "webpack -p",
-    "test": "ts-mocha -p ./tsconfig.json ./**/tests/models/*.test.ts -w --watch-extensions ts",
+    "test": "NODE_ENV=test ts-mocha -p ./tsconfig.json ./**/tests/models/*.test.ts -w --watch-extensions ts",
     "test-selenium": "concurrently \"selenium-standalone start\" \"npm run test-selenium-tests\"",
     "test-selenium-tests": "wait-port localhost:4444 && ts-mocha ./tests/webpage/*.s.test.ts"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@types/node": "^12.12.6",
+    "@types/node": "^12.12.14",
     "concurrently": "^5.0.0",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
@@ -24,14 +24,16 @@
     "wait-port": "^0.2.6"
   },
   "devDependencies": {
-    "@types/chai": "^4.2.4",
+    "@types/chai": "^4.2.6",
     "@types/chai-spies": "^1.0.1",
     "@types/express": "^4.17.2",
     "@types/mocha": "^5.2.7",
+    "@types/selenium-webdriver": "^4.0.5",
     "chai": "^4.2.0",
     "chai-spies": "^1.0.0",
     "chromedriver": "^78.0.1",
-    "selenium-standalone": "^6.16.0",
+    "mocha": "^6.2.2",
+    "selenium-standalone": "^6.17.0",
     "selenium-webdriver": "^4.0.0-alpha.5",
     "ts-mocha": "^6.0.0",
     "typescript": "^3.7.2",
