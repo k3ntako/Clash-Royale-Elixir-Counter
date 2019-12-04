@@ -1,32 +1,37 @@
 import Cards from '../../src/models/Cards';
-import chai, { assert, expect } from 'chai';
-import spies from 'chai-spies';
-chai.use(spies);
-import fs from 'fs';
-import { ICardInfoResponse } from '../../src/utilities/interfaces';
+import { assert } from 'chai';
+import { knightCard, babyDragaonCard } from '../_test_utilities/_cards.utils';
 
-const testOutputDir = './tests/cards.json';
 
 describe('Cards', (): void => {
-  before(async (): Promise<void> => {
-    // deletes test output file before running the tests in this describe block
-    // This is just in case. The after() should have deleted it after the previous run.
-    if (fs.existsSync(testOutputDir)) {
-      await fs.unlinkSync(testOutputDir);
-    }
-
-  });
-
-  after(async (): Promise<void> => {
-    if (fs.existsSync(testOutputDir)) {
-      await fs.unlinkSync(testOutputDir);
-    }
-  });
-
   describe('constructor', (): void => {
-    it('should have cards field initiated as an empty array', (): void => {
+    it('should have cards and cardNames fields initiated as empty arrays', (): void => {
       const cards = new Cards();
       assert(Array.isArray(cards.cards));
+      assert(Array.isArray(cards.cardNames));
+
+      assert.lengthOf(cards.cards, 0);
+      assert.lengthOf(cards.cardNames, 0);
+    });
+  });
+
+  describe('all', (): void => {
+    it('should get cards from server and set it to cards array', async (): Promise<void> => {
+      const cards = new Cards();
+
+      await cards.all();
+
+      assert.lengthOf(cards.cards, 2);
+      assert.sameDeepMembers(cards.cards, [knightCard, babyDragaonCard]);
+    });
+
+    it('should add the names to cardNames', async (): Promise<void> => {
+      const cardNames = [knightCard, babyDragaonCard].map(card => card.name);
+      const cards = new Cards();
+
+      await cards.all();
+
+      assert.sameMembers(cards.cardNames, cardNames);
     });
   });
 });

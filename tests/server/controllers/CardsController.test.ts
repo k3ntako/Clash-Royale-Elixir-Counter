@@ -1,35 +1,11 @@
-import chai, { assert, expect } from 'chai';
-import spies from 'chai-spies';
-chai.use(spies);
+import { assert, expect } from 'chai';
 import fs from 'fs';
-import { ICardInfoResponse } from '../../../server/types/interfaces';
+import {knightCard, babyDragaonCard} from '../../_test_utilities/_cards.utils';
 
 import CardsController from '../../../server/controllers/CardsController';
 import cardsUtils from '../../../server/utilities/cardsUtils';
 
 const testOutputDir = './tests/cards.json';
-
-const knightCard: ICardInfoResponse = {
-  key: "knight",
-  name: "Knight",
-  elixir: 3,
-  type: "Troop",
-  rarity: "Common",
-  arena: 0,
-  description: "A tough melee fighter. The Barbarian's handsome, cultured cousin. Rumor has it that he was knighted based on the sheer awesomeness of his mustache alone.",
-  id: 26000000
-};
-
-const babyDragaonCard: ICardInfoResponse = {
-  key: "baby-dragon",
-  name: "Baby Dragon",
-  elixir: 4,
-  type: "Troop",
-  rarity: "Epic",
-  arena: 0,
-  description: "Burps fireballs from the sky that deal area damage. Baby dragons hatch cute, hungry and ready for a barbeque.",
-  id: 26000015
-};
 
 const mockCards = [knightCard, babyDragaonCard];
 const mockCardsStr = JSON.stringify(mockCards);

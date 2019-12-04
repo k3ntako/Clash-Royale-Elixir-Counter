@@ -1,17 +1,6 @@
 import Game from '../../src/models/Game';
 import {assert} from 'chai';
-import { ICardInfoResponse } from '../../src/utilities/interfaces';
-
-const knightCard: ICardInfoResponse = {
-  "key": "knight",
-  "name": "Knight",
-  "elixir": 3,
-  "type": "Troop",
-  "rarity": "Common",
-  "arena": 0,
-  "description": "A tough melee fighter. The Barbarian's handsome, cultured cousin. Rumor has it that he was knighted based on the sheer awesomeness of his mustache alone.",
-  "id": 26000000
-}
+import { knightCard, babyDragaonCard } from '../_test_utilities/_cards.utils';
 
 describe('Game class', (): void => {
   describe('Fundamentals', (): void => {

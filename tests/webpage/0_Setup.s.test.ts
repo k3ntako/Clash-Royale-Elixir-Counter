@@ -14,8 +14,12 @@ const findShadowRootElement = async (elem, locator): Promise<any> => {
   return (await findShadowRootElements(elem, locator))[0];
 }
 
+before(async function (): Promise<void> {
+  // Sets timeout to get webpage to 5 secs
+  // don't use arrow functions for "before()" callback,
+  // because they bind "this" and makes "this.timeout" inaccessible
+  this.timeout(5000);
 
-before(async (): Promise<void> => {
   // Makes following variables available globally during webpage testing
   Object.assign(global, {
     driver,
@@ -24,6 +28,7 @@ before(async (): Promise<void> => {
     findShadowRootElement,
   });
 
+  // Get the webpage
   await driver.get('http://localhost:3000');
 });
 
