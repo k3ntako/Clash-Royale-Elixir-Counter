@@ -9,7 +9,7 @@ module.exports = {
 
       if (!cards || !cards.length){
         const options = { headers: { auth: process.env.ROYALE_API_KEY } };
-        cards = await cardUtils.fetch('https://api.royaleapi.com/constant/cards', options);
+        cards = await cardUtils.get('https://api.royaleapi.com/constant/cards', options);
 
         cardUtils.writeCardsFile(JSON.stringify(cards));
       }

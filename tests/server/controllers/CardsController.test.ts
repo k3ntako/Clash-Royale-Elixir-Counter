@@ -1,95 +1,81 @@
-import { assert, expect } from 'chai';
+import { assert } from 'chai';
+import sinon from 'sinon';
 import fs from 'fs';
 import {knightCard, babyDragaonCard} from '../../_test_utilities/_cards.utils';
 
 import CardsController from '../../../server/controllers/CardsController';
 import cardsUtils from '../../../server/utilities/cardsUtils';
 
-const testOutputDir = './tests/cards.json';
+import config from '../../../config';
+const testOutputDir = config.cardsFileDir;
 
 const mockCards = [knightCard, babyDragaonCard];
 const mockCardsStr = JSON.stringify(mockCards);
 
+let getFake;
+
 describe('CardsController', (): void => {
-  beforeEach(async (): Promise<void> => {
+  beforeEach((): void => {
     // deletes test output file before running the tests in this describe block
     // This is just in case. The after() should have deleted it after the previous run.
     if (fs.existsSync(testOutputDir)) {
-      await fs.unlinkSync(testOutputDir);
+      fs.unlinkSync(testOutputDir);
+    }
+
+    getFake = sinon.fake.returns(mockCards); // mockCards are the cards from Royale API
+    sinon.replace(cardsUtils, 'get', getFake);
+  });
+
+  afterEach((): void => {
+    sinon.restore();
+  })
+
+  after((): void => {
+    if (fs.existsSync(testOutputDir)) {
+      fs.unlinkSync(testOutputDir); // deletes test output file after running the tests in this describe block
     }
   });
 
-  after(async (): Promise<void> => {
-    await fs.unlinkSync(testOutputDir); // deletes test output file after running the tests in this describe block
-  });
-
   describe('.all', (): void => {
-    it('getCards() should get Clash Royale card info from RoyaleAPI.com and assign it to cards.cards', (done): void => {
+    it('should get card info from the Royale API, if file does not exist', (done): void => {
+      const readCardsFileFake = sinon.fake.returns(null); // returns null because file does not exist
+      sinon.replace(cardsUtils, 'readCardsFile', readCardsFileFake);
+
       const req = {};
       const res = {
         json: (response) => {
-          const responseJSON = JSON.parse(response);
-          const cardInfo = responseJSON.cards;
-          expect(cardInfo).to.be.an('array');
-          expect(cardInfo).to.have.lengthOf.above(1);
+          sinon.assert.calledOnce(readCardsFileFake);
+          sinon.assert.calledOnce(getFake);
 
-          const firstCard = cardInfo[0];
-          expect(firstCard).to.have.all.keys("key", "name", "elixir", "type", "rarity", "arena", "description", "id");
+          assert(Array.isArray(response), "should return an array");
+          assert.lengthOf(response, mockCards.length);
+          assert.sameDeepMembers(response, mockCards);
         }
       }
 
       CardsController.all(req, res, done);
     });
 
-    it('getCards() should get card info from the Royale API if file fails', (done): void => {
-      chai.spy.on(cardsUtils, 'readFile');
-      chai.spy.on(cardsUtils, 'fetch');
-
-      expect(cardsUtils.readFile).to.be.spy;
-      expect(cardsUtils.fetch).to.be.spy;
+    it('should save cards to file after fetch (when file does not exist)', (done): void => {
+      const readCardsFileFake = sinon.fake.returns(null);  // returns null because file does not exit
+      sinon.replace(cardsUtils, 'readCardsFile', readCardsFileFake);
 
       const req = {};
       const res = {
         json: (response) => {
-          expect(cardsUtils.readFile).to.have.been.called();
-          expect(cardsUtils.fetch).to.have.been.called();
+          sinon.assert.calledOnce(readCardsFileFake);
+          sinon.assert.calledOnce(getFake);
 
-          const responseJSON = JSON.parse(response);
-          expect(responseJSON).to.be.an('array');
-          expect(responseJSON).to.have.lengthOf.above(1);
 
-          const firstCard = responseJSON[0];
-          expect(firstCard).to.have.all.keys("key", "name", "elixir", "type", "rarity", "arena", "description", "id");
-        }
-      }
+          const fileData: string = fs.readFileSync(testOutputDir, "utf8");
+          const cardsFromFile: {}[] = JSON.parse(fileData);
+          assert(Array.isArray(response), "should return an array");
 
-      CardsController.all(req, res, done);
-    });
+          assert.lengthOf(cardsFromFile, response.length);
+          assert.lengthOf(cardsFromFile, mockCards.length);
 
-    it('getCards() should fetch cards from Royale API, if file does not exist', (done): void => {
-      chai.spy.on(cardsUtils, 'readFile');
-      chai.spy.on(cardsUtils, 'writeFile');
-      chai.spy.on(cardsUtils, 'fetch');
-
-      expect(cardsUtils.readFile).to.be.spy;
-      expect(cardsUtils.writeFile).to.be.spy;
-      expect(cardsUtils.fetch).to.be.spy;
-
-      const req = {};
-      const res = {
-        json: (response) => {
-          // TODO: mock fetch with sinon or something else
-          expect(cardsUtils.readFile).to.have.been.called();
-          expect(cardsUtils.fetch).to.have.been.called();
-          expect(cardsUtils.writeFile).to.have.been.called();
-
-          const responseJSON = JSON.parse(response);
-          const data: string = fs.readFileSync(testOutputDir, "utf8");
-          const cardInfo: {}[] = JSON.parse(data);
-          expect(cardInfo).to.be.an('array');
-          expect(cardInfo).to.have.lengthOf(responseJSON.length); // TODO: this length should be compared with mock response
-          const firstCard = cardInfo[0];
-          expect(firstCard).to.have.all.keys("key", "name", "elixir", "type", "rarity", "arena", "description", "id");
+          assert.sameDeepMembers(cardsFromFile, response);
+          assert.sameDeepMembers(cardsFromFile, mockCards);
         }
       }
 
@@ -99,33 +85,28 @@ describe('CardsController', (): void => {
     it('getCards() should not fetch if file already exists', (done): void => {
       fs.writeFileSync(testOutputDir, mockCardsStr);
 
-      chai.spy.on(cardsUtils, 'readFile');
-      chai.spy.on(cardsUtils, 'writeFile');
-      chai.spy.on(cardsUtils, 'fetch');
+      const readCardsFileFake = sinon.fake.returns(mockCards); // returns mockCards because file exists
+      sinon.replace(cardsUtils, 'readCardsFile', readCardsFileFake);
 
-      expect(cardsUtils.readFile).to.be.spy;
-      expect(cardsUtils.writeFile).to.be.spy;
-      expect(cardsUtils.fetch).to.be.spy;
+      const writeCardsFileFake = sinon.fake();
+      sinon.replace(cardsUtils, 'writeCardsFile', writeCardsFileFake);
 
       const req = {};
       const res = {
         json: (response) => {
-          const responseJSON = JSON.parse(response);
+          sinon.assert.calledOnce(readCardsFileFake);
+          sinon.assert.notCalled(writeCardsFileFake);
+          sinon.assert.notCalled(getFake);
 
-          expect(cardsUtils.readFile).to.have.been.called();
-          expect(cardsUtils.fetch).to.not.have.been.called();
-          expect(cardsUtils.writeFile).not.to.have.been.called();
+          // manually read file created by CardsController.all()
+          const fileData: string = fs.readFileSync(testOutputDir, "utf8");
+          const cardsFromFile: {}[] = JSON.parse(fileData);
 
-          const data: string = fs.readFileSync(testOutputDir, "utf8");
-          const cardInfo: {}[] = JSON.parse(data);
-          expect(cardInfo).to.be.an('array');
-          expect(cardInfo).to.have.lengthOf(mockCards.length);
-          const firstCard = cardInfo[0];
-          expect(firstCard).to.have.all.keys("key", "name", "elixir", "type", "rarity", "arena", "description", "id");
-          // controller response
-          expect(responseJSON).to.have.deep.members(mockCards);
-          // file
-          expect(cardInfo).to.have.deep.members(mockCards);
+          assert(Array.isArray(cardsFromFile));
+          assert.lengthOf(cardsFromFile, mockCards.length);
+          assert.lengthOf(cardsFromFile, response.length);
+          assert.sameDeepMembers(cardsFromFile, mockCards);
+          assert.sameDeepMembers(cardsFromFile, response);
         }
       }
 

@@ -9,41 +9,45 @@ const json = [ knightCard, babyDragaonCard ];
 const jsonStr = JSON.stringify(json);
 
 
-const testOutputDir = './tests/cards.json';
+import config from '../../../config';
+const testOutputDir = config.cardsFileDir;
+
 
 describe('cardsUtils', (): void => {
-  before(async (): Promise<void> => {
+  before((): void => {
     // deletes test output file before running the tests in this describe block
     // This is just in case. The after() should have deleted it after the previous run.
     if (fs.existsSync(testOutputDir)) {
-      await fs.unlinkSync(testOutputDir);
+      fs.unlinkSync(testOutputDir);
     }
   });
 
-  after(async (): Promise<void> => {
-    await fs.unlinkSync(testOutputDir); // deletes test output file after running the tests in this describe block
+  after((): void => {
+    if (fs.existsSync(testOutputDir)) {
+      fs.unlinkSync(testOutputDir);
+    }
   });
 
-  describe('.readFile', (): void => {
-    it('should return null', async (): Promise<void> => {
-      const data = cardsUtils.readFile();
+  describe('.readCardsFile', (): void => {
+    it('should return null', (): void => {
+      const data = cardsUtils.readCardsFile();
       assert.strictEqual(data, null);
     });
 
-    it('should read card info from file', async (): Promise<void> => {
-      cardsUtils.writeFile(jsonStr);
+    it('should read card info from file', (): void => {
+      cardsUtils.writeCardsFile(jsonStr);
 
-      const cardsJSON: ICardInfoResponse[] | null = cardsUtils.readFile();
+      const cardsJSON: ICardInfoResponse[] | null = cardsUtils.readCardsFile();
       expect(cardsJSON).to.be.an('array');
       expect(cardsJSON).to.have.lengthOf(json.length);
     });
   });
 
-  describe('.writeFile', (): void => {
-    it('should writes string to a file', async (): Promise<void> => {
-      cardsUtils.writeFile(jsonStr);
+  describe('.writeCardsFile', (): void => {
+    it('should writes string to a file', (): void => {
+      cardsUtils.writeCardsFile(jsonStr);
 
-      const data: string = await fs.readFileSync(testOutputDir, "utf8");
+      const data: string = fs.readFileSync(testOutputDir, "utf8");
       const cardInfo: {}[] = JSON.parse(data);
       expect(cardInfo).to.be.an('array');
       expect(cardInfo).to.have.lengthOf(json.length);

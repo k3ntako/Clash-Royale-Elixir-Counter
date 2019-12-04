@@ -7,7 +7,19 @@ const testCardsFileName = 'test_cards.json';
 const testCardsFolderDir = path.join(__dirname, './tests/server/data');
 const testcardsFileDir = path.join(testCardsFolderDir, testCardsFileName);
 
-const config = {
+export interface IConfig {
+  cardsFileName: string;
+  cardsFolderDir: string;
+  cardsFileDir: string;
+}
+
+export interface IConfigs {
+  development: IConfig;
+  test: IConfig;
+  production: IConfig;
+}
+
+const config: IConfigs = {
   development: {
     cardsFileName,
     cardsFolderDir,

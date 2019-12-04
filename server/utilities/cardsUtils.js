@@ -2,7 +2,7 @@ const fs = require('fs');
 const config = require('../../config');
 const cardsFolderDir = config.cardsFolderDir;
 const cardsFileDir = config.cardsFileDir;
-const https = require('https');
+const fetch = require('node-fetch');
 
 // interface ICardInfoResponse {
 //   key: string,
@@ -29,37 +29,27 @@ const readCardsFile = () => {//: ICardInfoResponse[] | null
 
     return JSON.parse(data);
   } catch (err) {
-    console.error("cardUtils.readFile", err.message);
+    console.error("cardUtils.readCardsFile", err.message);
     return null;
   }
 };
 
-const fetch = async (url, options = {}) => { //: Promise<ICardInfoResponse[]>
-  return new Promise((resolve, reject) => {
+const get = async (url, options = {}) => { //: Promise<ICardInfoResponse[]>
+  try {
     // Options
     const defaultOptions = { method: 'GET' };
     options = Object.assign(defaultOptions, options);
 
-    // Callback
-    const callback = (response) => {
-      response.setEncoding('utf8');
-      let responseJSONStr = '';
-      response.on('data', (chunk) => { responseJSONStr += chunk }); //:string :void
-      response.on('end', () => { resolve(JSON.parse(responseJSONStr)) }); //:void
-    }
+    const response = await fetch(url, options);
+    return await response.json();
+  } catch (err) {
+    throw new Error(err);
+  }
 
-    // Request
-    const req = https.request(url, options, callback);
-
-    // Reject error
-    req.on('error', (err) => reject(err));//: Error
-
-    req.end();
-  });
 };
 
 module.exports = {
   writeCardsFile,
   readCardsFile,
-  fetch,
+  get,
 }

@@ -9,9 +9,9 @@
   "scripts": {
     "start": "concurrently --raw \"webpack --mode=development --watch\" \"NODE_ENV=development node server/index.ts\"",
     "build": "webpack -p",
-    "test": "NODE_ENV=test ts-mocha -p ./tsconfig.json ./**/tests/models/*.test.ts -w --watch-extensions ts",
+    "test": "NODE_ENV=test ts-mocha -p ./tsconfig.json ./**/tests/**/*.test.ts -w --watch-extensions ts",
     "test-selenium": "concurrently \"selenium-standalone start\" \"npm run test-selenium-tests\"",
-    "test-selenium-tests": "wait-port localhost:4444 && ts-mocha ./tests/webpage/*.s.test.ts"
+    "test-selenium-tests": "wait-port localhost:4444 && ts-mocha ./tests/webpage/*.selenium_test.ts"
   },
   "author": "",
   "license": "ISC",
@@ -20,6 +20,8 @@
     "concurrently": "^5.0.0",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "node-fetch": "^2.6.0",
+    "sinon": "^7.5.0",
     "ts-loader": "^6.2.1",
     "wait-port": "^0.2.6"
   },
