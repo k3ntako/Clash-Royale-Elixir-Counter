@@ -18,7 +18,9 @@ describe('Cards', (): void => {
   });
 
   after(async (): Promise<void> => {
-    await fs.unlinkSync(testOutputDir); // deletes test output file after running the tests in this describe block
+    if (fs.existsSync(testOutputDir)) {
+      await fs.unlinkSync(testOutputDir);
+    }
   });
 
   describe('constructor', (): void => {

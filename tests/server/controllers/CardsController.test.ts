@@ -121,7 +121,7 @@ describe('CardsController', (): void => {
     });
 
     it('getCards() should not fetch if file already exists', (done): void => {
-      fs.writeFileSync(testOutputDir, jsonStr);
+      fs.writeFileSync(testOutputDir, mockCardsStr);
 
       chai.spy.on(cardsUtils, 'readFile');
       chai.spy.on(cardsUtils, 'writeFile');
