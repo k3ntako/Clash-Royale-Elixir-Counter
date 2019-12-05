@@ -15,7 +15,8 @@
       "mocha",
       "chai",
       "chai-spies",
-      "express"
+      "express",
+      "selenium-webdriver"
     ]
   }
 }

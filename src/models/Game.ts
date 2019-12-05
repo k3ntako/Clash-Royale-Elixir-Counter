@@ -1,13 +1,15 @@
 import { ICardInfoResponse } from '../utilities/interfaces';
-
+import Cards from './Cards';
 export default class Game {
   elixir: number;
   timer: NodeJS.Timeout | null;
   onElixirChange: Function;
+  cards: Cards;
   constructor(){
     this.elixir = 0;
     this.timer = null;
     this.onElixirChange = () => {};
+    this.cards = new Cards();
   }
 
   getElixir(): number{

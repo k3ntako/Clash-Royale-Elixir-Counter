@@ -28,5 +28,15 @@ export default class Cards {
     }
   }
 
+  getCardByKey = (key) => {
+    if (!this.cards.length){
+      throw new Error('Cards not loaded');
+    }
+
+    if (!key) {
+      throw new Error('No ID provided');
+    }
+
+    return this.cards.find(card => card.key === key);
   }
 }

@@ -1,4 +1,5 @@
 import Game from '../../src/models/Game';
+import Cards from '../../src/models/Cards';
 import chai, { assert, expect } from 'chai';
 import spies from 'chai-spies';
 chai.use(spies);
@@ -81,4 +82,11 @@ describe('Game class', (): void => {
       }, 2900);
     }).timeout(6500); // extends timeout from 2000ms (default) to 6500 ms
   });
+
+  describe('constructor', () => {
+    it('should initiate with an instance of the Cards class', () => {
+      const game = new Game();
+      assert.instanceOf(game.cards, Cards);
+    });
+  })
 });

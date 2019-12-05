@@ -1,4 +1,6 @@
 import Cards from '../../src/models/Cards';
+import sinon from 'sinon';
+import fetchMock from 'fetch-mock';
 import { assert } from 'chai';
 import { knightCard, babyDragaonCard } from '../_test_utilities/_cards.utils';
 
@@ -32,6 +34,42 @@ describe('Cards', (): void => {
       await cards.all();
 
       assert.sameMembers(cards.cardNames, cardNames);
+    });
+  });
+
+  describe('getCardByKey', (): void => {
+    it('should throw an error if cards have not loaded', (): void => {
+      fetchMock.restore(); // removes fetchMoch in setup
+
+      // API call returns empty array
+      fetchMock.mock('/api/cards', {
+        status: 200,
+        body: []
+      });
+
+
+
+      const cards = new Cards();
+      const spy = sinon.spy(cards, "getCardByKey");
+
+      try {
+        cards.getCardByKey(babyDragaonCard.key);
+      } catch (error) {
+      }
+
+      assert(spy.threw());
+
+      sinon.restore();
+    });
+
+    it('should get card info given a key', (done): void => {
+      const cards = new Cards();
+
+      setTimeout(() => { // waits for cards to be loaded
+        const card = cards.getCardByKey(babyDragaonCard.key);
+        assert.deepEqual(card, babyDragaonCard);
+        done();
+      }, 1000);
     });
   });
 });
