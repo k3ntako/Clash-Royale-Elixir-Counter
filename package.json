@@ -9,6 +9,7 @@
   "scripts": {
     "start": "concurrently --raw \"webpack --mode=development --watch\" \"NODE_ENV=development node server/index.ts\"",
     "build": "webpack -p",
+    "test-with-api-check": "WITH_API_CHECK=true npm test",
     "test": "NODE_ENV=test ts-mocha -p ./tsconfig.json ./**/tests/**/*.test.ts -w --watch-extensions ts",
     "test-selenium": "concurrently \"selenium-standalone start\" \"npm run test-selenium-tests\"",
     "test-selenium-tests": "wait-port localhost:4444 && ts-mocha ./tests/webpage/*.selenium_test.ts"
@@ -31,6 +32,7 @@
     "@types/mocha": "^5.2.7",
     "@types/selenium-webdriver": "^4.0.5",
     "chai": "^4.2.0",
+    "chalk": "^3.0.0",
     "chromedriver": "^78.0.1",
     "fetch-mock": "^8.0.0",
     "mocha": "^6.2.2",
