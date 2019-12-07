@@ -1,6 +1,7 @@
 const { By } = require('selenium-webdriver');
 import { assert } from 'chai';
 import HomePage from '../../src';
+import Cards from '../../src/models/Cards';
 
 let homepage: HomePage;
 let searchInput, input, buttons, elixirCounter;
@@ -35,5 +36,23 @@ describe('Search input', (): void => {
 
     const cardName = await suggestions[0].getText();
     assert.strictEqual(cardName, 'Skeleton Army');
+  }).timeout(6500);
+
+  it('should have an image', async (): Promise<void> => {
+    // set elixir to 10
+    await buttons[10].click();
+
+    await input.sendKeys('skEl');
+
+    // click on first suggestion
+    const suggestions = await searchInput.findElements(By.className('suggestion'));
+    await suggestions[0].click();
+
+    for( let suggestion of suggestions){
+      const text = await suggestion.getText();
+      const img = await suggestion.findElement(By.tagName('img'));
+      const src = await img.getAttribute('src');
+      assert.strictEqual(src, `https://royaleapi.github.io/cr-api-assets/cards-75/${Cards.keyFromName(text)}.png`)
+    }
   }).timeout(6500);
 });

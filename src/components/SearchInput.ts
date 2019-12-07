@@ -52,6 +52,10 @@ export default class SearchInput extends HTMLElement {
       suggestionDiv.className = "suggestion";
       suggestionDiv.onclick = () => this.onSuggestionClick(Cards.keyFromName(suggestion));
 
+      let img = document.createElement("img")
+      img.src = `https://royaleapi.github.io/cr-api-assets/cards-75/${Cards.keyFromName(suggestion)}.png`
+      suggestionDiv.appendChild(img);
+
       let span = document.createElement('span');
       span.innerText = suggestion;
       suggestionDiv.appendChild(span);
