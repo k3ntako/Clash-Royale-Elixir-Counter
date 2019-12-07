@@ -1,7 +1,11 @@
+import Cards from '../models/Cards';
+import Game from '../models/Game';
+
 export default class SearchInput extends HTMLElement {
   search: string;
   value?: string;
   cardNames: string[];
+  game: Game;
 
   constructor() {
     super();
@@ -29,6 +33,10 @@ export default class SearchInput extends HTMLElement {
     return suggestions.sort((a,b) => this.suggestionSortFunc(a,b, value)).slice(0,10);
   }
 
+  onSuggestionClick = (key) => {
+    this.game.playCard(key);
+  }
+
   onChange = (e: any) => {
     const oldDiv = this.querySelector('div');
     oldDiv && oldDiv.remove();
@@ -38,12 +46,18 @@ export default class SearchInput extends HTMLElement {
 
     const suggestions = this.sortSuggestions(this.value.toLowerCase(), this.cardNames);
 
-    let div = document.createElement("div");;
+    let div = document.createElement("div");
     suggestions.forEach(suggestion => {
-      let li = document.createElement("li");
-      li.innerText = suggestion;
-      div.appendChild(li);
-    })
+      let suggestionDiv = document.createElement("div");
+      suggestionDiv.className = "suggestion";
+      suggestionDiv.onclick = () => this.onSuggestionClick(Cards.keyFromName(suggestion));
+
+      let span = document.createElement('span');
+      span.innerText = suggestion;
+      suggestionDiv.appendChild(span);
+
+      div.appendChild(suggestionDiv);
+    });
 
     this.append(div);
   }

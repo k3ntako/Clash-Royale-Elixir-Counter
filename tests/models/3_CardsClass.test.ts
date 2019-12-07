@@ -2,7 +2,7 @@ import Cards from '../../src/models/Cards';
 import fetchMock from 'fetch-mock';
 import sinon from 'sinon';
 import { assert } from 'chai';
-import { firstFifteenCards, firstFifteenCardNames } from '../_test_utilities/_cards.utils';
+import { firstFifteenCards, firstFifteenCardNames, allCards } from '../_test_utilities/_cards.utils';
 
 
 describe('Cards', (): void => {
@@ -72,6 +72,15 @@ describe('Cards', (): void => {
       const cards = await Cards.initialize();
       const card = cards.getCardByKey(secondCard.key);
       assert.deepEqual(card, secondCard);
+    });
+  });
+
+  describe('.getCardByKey', (): void => {
+    it('should convert name to ID', () => {
+      allCards.forEach(card => {
+        const key = Cards.keyFromName(card.name);
+        assert.strictEqual(key, card.key);
+      });
     });
   });
 });

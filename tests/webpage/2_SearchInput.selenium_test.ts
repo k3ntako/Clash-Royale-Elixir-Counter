@@ -28,7 +28,7 @@ describe('Search input', (): void => {
     const input = await searchInput.findElement(By.tagName('input'));
     await input.sendKeys('SKeleton');
 
-    const suggestions = await searchInput.findElements(By.tagName('li'));
+    const suggestions = await searchInput.findElements(By.className('suggestion'));
     assert.lengthOf(suggestions, 4, 'should have 4 suggestions');
 
     const cardNamePromises = suggestions.map(async suggestion => await suggestion.getText());
@@ -47,7 +47,7 @@ describe('Search input', (): void => {
     const input = await searchInput.findElement(By.tagName('input'));
     await input.sendKeys('a');
 
-    const suggestions = await searchInput.findElements(By.css('li'));
+    const suggestions = await searchInput.findElements(By.className('suggestion'));
     assert.lengthOf(suggestions, 10, 'should have 10 suggestions');
 
     const cardNamePromises = suggestions.map(async suggestion => await suggestion.getText());
@@ -73,7 +73,7 @@ describe('Search input', (): void => {
     await input.clear();
     await input.sendKeys('z');
 
-    const suggestions = await searchInput.findElements(By.css('li'));
+    const suggestions = await searchInput.findElements(By.className('suggestion'));
 
     const cardNamePromises = suggestions.map(async suggestion => await suggestion.getText());
     const cardNames = await Promise.all(cardNamePromises);
@@ -94,7 +94,7 @@ describe('Search input', (): void => {
     await input.clear();
     await input.sendKeys('g');
 
-    const suggestions = await searchInput.findElements(By.css('li'));
+    const suggestions = await searchInput.findElements(By.className('suggestion'));
 
     const cardNamePromises = suggestions.map(async suggestion => await suggestion.getText());
     const cardNames = await Promise.all(cardNamePromises);
@@ -117,7 +117,7 @@ describe('Search input', (): void => {
     await input.clear();
     await input.sendKeys('S');
 
-    const suggestions = await searchInput.findElements(By.css('li'));
+    const suggestions = await searchInput.findElements(By.className('suggestion'));
 
     const cardNamePromises = suggestions.map(async suggestion => await suggestion.getText());
     const cardNames = await Promise.all(cardNamePromises);

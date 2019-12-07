@@ -35,6 +35,14 @@ export default class Cards {
     }
   }
 
+  static keyFromName = (name): string => {
+    const spaceRegex = /\s/gi;
+    const outputName = name.replace(spaceRegex, "-");
+
+    const periodRegex = /\./gi;
+    return outputName.replace(periodRegex, "").toLowerCase();
+  }
+
   getCardByKey = (key) => {
     if (!this.cards.length){
       throw new Error('Cards not loaded');

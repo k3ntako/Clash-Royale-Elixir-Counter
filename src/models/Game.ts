@@ -25,18 +25,20 @@ export default class Game {
     const newElixir: number = this.elixir + elixir;
     if (newElixir > 10) {
       this.setElixir(10);
-    } else if (newElixir < 0) {
-      this.setElixir(0);
-    } else {
+    } else if (newElixir >= 0) {
       this.setElixir(newElixir);
     }
+
+    // if less than 0, don't do anything
   }
 
   subtractElixir(elixir: number): void {
     this.addElixir(-1 * elixir);
   }
 
-  playCard(card: ICardInfoResponse): void {
+  playCard(key: string): void {
+    const card = this.cards.getCardByKey(key);
+
     const newElixir: number = this.elixir - card.elixir;
     if (newElixir >= 0) {
       this.setElixir(newElixir);

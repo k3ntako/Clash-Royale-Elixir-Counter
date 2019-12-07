@@ -85,10 +85,17 @@ describe('Game class', (): void => {
       assert.isAtLeast(game.getElixir(), 0);
     });
 
-    it('should set the field to 0, if the result is less than 0', async (): Promise<void> => {
+    it('should not do anything, if the result would be less than 0', async (): Promise<void> => {
       const game = await Game.initialize();
       game.setElixir(2);
       game.subtractElixir(3);
+      assert.strictEqual(game.getElixir(), 2);
+    });
+
+    it('should allow result to be 0', async (): Promise<void> => {
+      const game = await Game.initialize();
+      game.setElixir(2);
+      game.subtractElixir(2);
       assert.strictEqual(game.getElixir(), 0);
     });
   });
@@ -97,14 +104,14 @@ describe('Game class', (): void => {
     it('should take an object with an elixir field, and subtract that value from game.elixir', async (): Promise<void>=> {
       const game = await Game.initialize();
       game.setElixir(4);
-      game.playCard(knightCard);
+      game.playCard(knightCard.key);
       assert.strictEqual(game.getElixir(), 1);
     });
 
     it('should not subtract any elixir if game.elixir is less than the elixir count provided', async (): Promise<void>=> {
       const game = await Game.initialize();
       game.setElixir(2);
-      game.playCard(knightCard);
+      game.playCard(knightCard.key);
       assert.strictEqual(game.getElixir(), 2);
     });
   });

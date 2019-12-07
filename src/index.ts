@@ -25,6 +25,7 @@ export default class HomePage extends HTMLElement{
     this.elixirCounter.game = this.game;
 
     this.searchInput.cardNames = this.game.cards.cardNames;
+    this.searchInput.game = this.game;
   }
 
   render(){
