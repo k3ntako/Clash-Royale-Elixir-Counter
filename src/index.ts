@@ -1,6 +1,7 @@
 import SearchInput from './components/SearchInput';
 import ElixirCounter from './components/ElixirCounter';
 import Game from './models/Game';
+import css from './css';
 
 window.customElements.define('search-input', SearchInput);
 window.customElements.define('elixir-counter', ElixirCounter);
@@ -30,6 +31,7 @@ export default class HomePage extends HTMLElement{
 
   render(){
     const div = document.createElement('div');
+    div.innerHTML = css;
 
     const h1 = document.createElement('h1');
     h1.innerText = "Clash Royale Elixir Counter";

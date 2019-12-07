@@ -30,7 +30,7 @@ export default class SearchInput extends HTMLElement {
     const searchRegex = new RegExp(value, "i"); // Case insensitive regex search
     const suggestions = cardNames.filter(name => searchRegex.test(name));
 
-    return suggestions.sort((a,b) => this.suggestionSortFunc(a,b, value)).slice(0,10);
+    return suggestions.sort((a,b) => this.suggestionSortFunc(a,b, value)).slice(0,24);
   }
 
   onSuggestionClick = (key) => {
@@ -47,6 +47,7 @@ export default class SearchInput extends HTMLElement {
     const suggestions = this.sortSuggestions(this.value.toLowerCase(), this.cardNames);
 
     let div = document.createElement("div");
+    div.className = "suggestions"
     suggestions.forEach(suggestion => {
       let suggestionDiv = document.createElement("div");
       suggestionDiv.className = "suggestion";

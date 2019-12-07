@@ -42,13 +42,13 @@ describe('Search input', (): void => {
     input.clear();
   }).timeout(6500);
 
-  it('should only suggest first 10 suggestions in alphabetical order', async (): Promise<void> => {
+  it('should only suggest first 20 suggestions in alphabetical order', async (): Promise<void> => {
     const searchInput = await findShadowRootElement(homepage, By.tagName('search-input'));
     const input = await searchInput.findElement(By.tagName('input'));
     await input.sendKeys('a');
 
     const suggestions = await searchInput.findElements(By.className('suggestion'));
-    assert.lengthOf(suggestions, 10, 'should have 10 suggestions');
+    assert.lengthOf(suggestions, 20, 'should have 20 suggestions');
 
     const cardNamePromises = suggestions.map(async suggestion => await suggestion.getText());
     const cardNames = await Promise.all(cardNamePromises);
