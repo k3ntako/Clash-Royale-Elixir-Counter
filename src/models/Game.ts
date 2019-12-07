@@ -5,11 +5,11 @@ export default class Game {
   timer: NodeJS.Timeout | null;
   onElixirChange: Function;
   cards: Cards;
-  constructor(){
+  constructor(cards){
     this.elixir = 0;
     this.timer = null;
     this.onElixirChange = () => {};
-    this.cards = new Cards();
+    this.cards = cards;
   }
 
   getElixir(): number{
@@ -43,7 +43,12 @@ export default class Game {
     }
   }
 
-  start(onElixirChange: Function = () => {}): void{
+  static async initialize(): Promise<Game>{
+    const cards = await Cards.initialize();
+    return new Game(cards);
+  }
+
+  async start(onElixirChange: Function = () => {}): Promise<void>{
     this.onElixirChange = onElixirChange;
     this.timer = setInterval(this.addElixir.bind(this, 1), 2800);
   }

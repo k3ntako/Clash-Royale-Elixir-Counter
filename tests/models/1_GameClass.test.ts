@@ -1,106 +1,110 @@
-import Game from '../../src/models/Game';
+import sinon from 'sinon';
 import {assert} from 'chai';
-import { knightCard, babyDragaonCard } from '../_test_utilities/_cards.utils';
+import Game from '../../src/models/Game';
+import Cards from '../../src/models/Cards';
+import { allCards, getCardByKey } from '../_test_utilities/_cards.utils';
+
+const knightCard = getCardByKey('knight');
 
 describe('Game class', (): void => {
-  describe('Fundamentals', (): void => {
-    it('should be a function (JS classes are special functions)', (): void => {
-      assert.strictEqual(typeof Game, 'function');
+  describe('.initialize', (): void => {
+    it('should return a Game instance', async (): Promise<void> => {
+      const game = await Game.initialize();
+
+      assert.instanceOf(game, Game);
     });
 
-    it('should have a elixir field equal to 0', (): void => {
-      const game = new Game();
+    it('should initialize cards and set it to .cards', async (): Promise<void> => {
+      const initializeCardsSpy = sinon.spy(Cards, "initialize");
+
+      const game = await Game.initialize();
+
+      sinon.assert.calledOnce(initializeCardsSpy);
+      assert.instanceOf(game.cards, Cards);
+      assert.lengthOf(game.cards.cards, allCards.length);
+    });
+  });
+
+  describe('constructor', (): void => {
+    it('should have a elixir field equal to 0', async (): Promise<void> => {
+      const game = await Game.initialize();
       assert.strictEqual(game.elixir, 0);
     });
+  });
 
-    it('should have a method called getElixir', (): void => {
-      const game = new Game();
-      assert.strictEqual(typeof game.getElixir, 'function');
+  describe('#getElixir', (): void => {
+    it('should return value of game.elixir', async (): Promise<void>=> {
+      const game = await Game.initialize();
+      game.elixir = 4;
+      assert.strictEqual(game.getElixir(), 4);
     });
+  });
 
-    it('should have a method called getElixir that returns 0', (): void => {
-      const game = new Game();
-      assert.strictEqual(game.getElixir(), 0);
-    });
-
-    it('should have a method called setElixir', (): void => {
-      const game = new Game();
-      assert.strictEqual(typeof game.setElixir, 'function');
-    });
-
-    it('should have a method called setElixir that sets the elixir equal to the argument', (): void => {
-      const game = new Game();
+  describe('#setElixir', (): void => {
+    it('should set the elixir equal to the argument', async (): Promise<void>=> {
+      const game = await Game.initialize();
       game.setElixir(5);
       assert.strictEqual(game.getElixir(), 5);
     });
+  });
 
-    it('should have a method called addElixir', (): void => {
-      const game = new Game();
-      assert.strictEqual(typeof game.addElixir, 'function');
-    });
-
-    it('should have a method called addElixir that adds the argument to the elixir field', (): void => {
-      const game = new Game();
+  describe('#addElixir', (): void => {
+    it('should add the argument to the elixir field', async (): Promise<void>=> {
+      const game = await Game.initialize();
       game.addElixir(3);
       assert.strictEqual(game.getElixir(), 3);
     });
 
-    it('addElixir should never allow elixir count to be more than 10', () => {
-      const game = new Game();
+    it('should never allow elixir count to be more than 10', async (): Promise<void> => {
+      const game = await Game.initialize();
       game.setElixir(9);
       game.addElixir(2);
       assert.isAtMost(game.getElixir(), 10);
     });
 
-    it('if the total is greater than 10, addElixir should set the field to 10', () => {
-      const game = new Game();
+    it('should set the field to 10 if the total is greater than 10', async (): Promise<void> => {
+      const game = await Game.initialize();
       game.setElixir(9);
       game.addElixir(2);
       assert.strictEqual(game.getElixir(), 10);
     });
+  });
 
-    it('should have a method called subtractElixir', (): void => {
-      const game = new Game();
-      assert.strictEqual(typeof game.subtractElixir, 'function');
-    });
-
-    it('should have a method called subtractElixir that subtracts the argument from the elixir field', (): void => {
-      const game = new Game();
+  describe('#subtractElixir', (): void => {
+    it('should subtract the argument from the elixir field', async (): Promise<void>=> {
+      const game = await Game.initialize();
       game.setElixir(7);
       game.subtractElixir(3);
       assert.strictEqual(game.getElixir(), 4);
     });
 
-    it('subtractElixir should never allow elixir count to be less than 0', (): void => {
-      const game = new Game();
+    it('should never allow elixir count to be less than 0', async (): Promise<void>=> {
+      const game = await Game.initialize();
       game.setElixir(2);
       game.subtractElixir(3);
       assert.isAtLeast(game.getElixir(), 0);
     });
 
-    it('if the result is less than 0, subtractElixir should set the field to 0', () => {
-      const game = new Game();
+    it('should set the field to 0, if the result is less than 0', async (): Promise<void> => {
+      const game = await Game.initialize();
       game.setElixir(2);
       game.subtractElixir(3);
       assert.strictEqual(game.getElixir(), 0);
     });
+  });
 
-    it('should have a method called playCard', (): void => {
-      const game = new Game();
-      assert.strictEqual(typeof game.playCard, 'function');
-    });
-
-    it('given an object with field "elixir", playCard() should subtract that from game.elixir', (): void => {
-      const game = new Game();
-      game.setElixir(4)
-      game.playCard(knightCard)
+  describe('#playCard', (): void => {
+    it('should take an object with an elixir field, and subtract that value from game.elixir', async (): Promise<void>=> {
+      const game = await Game.initialize();
+      game.setElixir(4);
+      game.playCard(knightCard);
       assert.strictEqual(game.getElixir(), 1);
     });
 
-    it('playCard should not subtract any elixir if game.elixir is less than the elixir count provided', (): void => {
-      const game = new Game();
-      game.setElixir(2)
-      game.playCard(knightCard)
+    it('should not subtract any elixir if game.elixir is less than the elixir count provided', async (): Promise<void>=> {
+      const game = await Game.initialize();
+      game.setElixir(2);
+      game.playCard(knightCard);
       assert.strictEqual(game.getElixir(), 2);
     });
   });

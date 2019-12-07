@@ -1,13 +1,12 @@
 import cardsUtils from '../../../server/utilities/cardsUtils';
-import { assert, expect } from 'chai';
+import { assert } from 'chai';
 import fs from 'fs';
 import {ICardInfoResponse} from '../../../server/types/interfaces';
-import { knightCard, babyDragaonCard } from '../../_test_utilities/_cards.utils';
+import { firstFifteenCards } from '../../_test_utilities/_cards.utils';
 
 
-const json = [ knightCard, babyDragaonCard ];
-const jsonStr = JSON.stringify(json);
 
+const firstFifteenCardsStr = JSON.stringify(firstFifteenCards);
 
 import config from '../../../config';
 const testOutputDir = config.cardsFileDir;
@@ -35,22 +34,25 @@ describe('cardsUtils', (): void => {
     });
 
     it('should read card info from file', (): void => {
-      cardsUtils.writeCardsFile(jsonStr);
+      cardsUtils.writeCardsFile(firstFifteenCardsStr);
 
       const cardsJSON: ICardInfoResponse[] | null = cardsUtils.readCardsFile();
-      expect(cardsJSON).to.be.an('array');
-      expect(cardsJSON).to.have.lengthOf(json.length);
+      assert(Array.isArray(cardsJSON));
+      assert.sameDeepMembers(cardsJSON, firstFifteenCards);
+      assert.lengthOf(cardsJSON, firstFifteenCards.length);
     });
   });
 
   describe('.writeCardsFile', (): void => {
     it('should writes string to a file', (): void => {
-      cardsUtils.writeCardsFile(jsonStr);
+      cardsUtils.writeCardsFile(firstFifteenCardsStr);
 
       const data: string = fs.readFileSync(testOutputDir, "utf8");
       const cardInfo: {}[] = JSON.parse(data);
-      expect(cardInfo).to.be.an('array');
-      expect(cardInfo).to.have.lengthOf(json.length);
+
+      assert(Array.isArray(cardInfo));
+      assert.sameDeepMembers(cardInfo, firstFifteenCards);
+      assert.lengthOf(cardInfo, firstFifteenCards.length);
     });
   });
 });

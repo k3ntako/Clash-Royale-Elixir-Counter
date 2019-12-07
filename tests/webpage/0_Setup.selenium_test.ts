@@ -36,3 +36,17 @@ after(async (): Promise<void> => {
   await driver.quit();
 });
 
+
+import fetchMock from 'fetch-mock';
+import { allCards } from '../_test_utilities/_cards.utils';
+
+beforeEach(() => {
+  fetchMock.mock('/api/cards', {
+    status: 200,
+    body: allCards,
+  });
+});
+
+afterEach(() => {
+  fetchMock.restore();
+});

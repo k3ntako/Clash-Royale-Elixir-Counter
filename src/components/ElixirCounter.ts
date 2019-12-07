@@ -1,5 +1,5 @@
-import Game from '../models/Game';
 import ElixirSetterButton from './ElixirSetterButton';
+import Game from '../models/Game';
 window.customElements.define('elixir-setter-button', ElixirSetterButton);
 
 
@@ -7,14 +7,14 @@ export default class ElixirCounter extends HTMLElement {
   game: Game;
   constructor() {
     super();
-    this.game = new Game();
-    this.game.start(this.onChange);
-    this.attachShadow({ mode: "open" })
+  }
+
+  connectedCallback(){
     this.render();
   }
 
   onChange = (elixir) => {
-    const h3 = this.shadowRoot.querySelector("h3");
+    const h3 = this.querySelector("h3");
     h3.innerText = String(elixir);
   }
 
@@ -32,6 +32,6 @@ export default class ElixirCounter extends HTMLElement {
       div.appendChild(button);
     }
 
-    this.shadowRoot && this.shadowRoot.appendChild(div);
+    this.append(div);
   }
 }

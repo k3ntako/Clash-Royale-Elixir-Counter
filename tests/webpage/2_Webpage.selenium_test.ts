@@ -1,11 +1,18 @@
 const {By} = require('selenium-webdriver');
 import { assert } from 'chai';
 
+let homepage: HomePage;
+
 describe('Opponent elixir counter', (): void => {
   describe('Timer', (): void => {
+    beforeEach(async (): Promise<void> => {
+      homepage = await driver.findElement(By.tagName('home-page'));
+    });
+
     it('should have elixir count that increases every 2.8 secs', async (): Promise<void> => {
-      const elixirCounter = await driver.findElement(By.tagName('elixir-counter'));
-      const opponentElixir = await findShadowRootElement(elixirCounter, By.tagName('h3'));
+      const elixirCounter = await findShadowRootElement(homepage, By.tagName('elixir-counter'));
+
+      const opponentElixir = await elixirCounter.findElement(By.tagName('h3'));
       const opponentElixirText = await opponentElixir.getText();
 
       assert.strictEqual(opponentElixirText, '0');
@@ -19,8 +26,8 @@ describe('Opponent elixir counter', (): void => {
 
   describe('Elixir setter buttons', (): void => {
     it('should have button from 0 to 10 to set elixir count', async (): Promise<void> => {
-      const elixirCounter = await driver.findElement(By.tagName('elixir-counter'));
-      const buttons = await findShadowRootElements(elixirCounter, By.tagName('elixir-setter-button'));
+      const elixirCounter = await findShadowRootElement(homepage, By.tagName('elixir-counter'));
+      const buttons = await elixirCounter.findElements(By.tagName('elixir-setter-button'));
 
       for(let [idx, elixirSetterButton] of buttons.entries()){
         const button = await elixirSetterButton.findElement(By.tagName('button'))
@@ -31,9 +38,9 @@ describe('Opponent elixir counter', (): void => {
     }).timeout(6500);
 
     it('should set elixir opponent elixir count to the value displayed on the button', async (): Promise<void> => {
-      const elixirCounter = await driver.findElement(By.tagName('elixir-counter'));
-      const opponentElixir = await findShadowRootElement(elixirCounter, By.tagName('h3'));
-      const buttons = await findShadowRootElements(elixirCounter, By.tagName('elixir-setter-button'));
+      const elixirCounter = await findShadowRootElement(homepage, By.tagName('elixir-counter'));
+      const opponentElixir = await elixirCounter.findElement(By.tagName('h3'));
+      const buttons = await elixirCounter.findElements(By.tagName('elixir-setter-button'));
 
       // The elixir count goes up by 1 every 2.8 secs.
       // The order of buttons were reversed 10 to 0,

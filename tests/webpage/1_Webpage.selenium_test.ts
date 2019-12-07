@@ -1,9 +1,17 @@
 const { By } = require('selenium-webdriver');
 import { assert } from 'chai';
+import HomePage from '../../src';
+
+let homepage: HomePage;
 
 describe('Webpage title', () => {
+  beforeEach(async (): Promise<void> => {
+    homepage = await driver.findElement(By.tagName('home-page'));
+  });
+
   it('should have website title', async (): Promise<void> => {
-    const websiteTitle = await driver.findElement(By.tagName('h1'));
+    const websiteTitle = await findShadowRootElement(homepage, By.tagName('h1'));
+
     const websiteTitleText = await websiteTitle.getText();
 
     assert.strictEqual(websiteTitleText, 'Clash Royale Elixir Counter');
@@ -11,9 +19,14 @@ describe('Webpage title', () => {
 })
 
 describe('Search input', (): void => {
+  beforeEach(async (): Promise<void> => {
+    homepage = await driver.findElement(By.tagName('home-page'));
+  });
+
   it('should have input where the "value" is updated with the user typing', async (): Promise<void> => {
-    const searchInput = await driver.findElement(By.tagName('search-input'));
-    const input = await findShadowRootElement(searchInput, By.tagName('input'));
+    const searchInput = await findShadowRootElement(homepage, By.tagName('search-input'));
+    const input = await searchInput.findElement(By.tagName('input'));
+
     const placeholder = await input.getAttribute('placeholder');
 
     assert.strictEqual(placeholder, 'Search Cards');
@@ -25,11 +38,11 @@ describe('Search input', (): void => {
   }).timeout(6500);
 
   it('should suggests cards based on search term (case insensitive)', async (): Promise<void> => {
-    const searchInput = await driver.findElement(By.tagName('search-input'));
-    const input = await findShadowRootElement(searchInput, By.tagName('input'));
-    await input.sendKeys('skeleton');
+    const searchInput = await findShadowRootElement(homepage, By.tagName('search-input'));
+    const input = await searchInput.findElement(By.tagName('input'));
+    await input.sendKeys('SKeleton');
 
-    const suggestions = await findShadowRootElements(searchInput, By.css('li'));
+    const suggestions = await searchInput.findElements(By.tagName('li'));
     assert.lengthOf(suggestions, 4, 'should have 4 suggestions');
 
     const cardNamePromises = suggestions.map(async suggestion => await suggestion.getText());
@@ -44,11 +57,11 @@ describe('Search input', (): void => {
   }).timeout(6500);
 
   it('should only suggest first 10 suggestions in alphabetical order', async (): Promise<void> => {
-    const searchInput = await driver.findElement(By.tagName('search-input'));
-    const input = await findShadowRootElement(searchInput, By.tagName('input'));
+    const searchInput = await findShadowRootElement(homepage, By.tagName('search-input'));
+    const input = await searchInput.findElement(By.tagName('input'));
     await input.sendKeys('a');
 
-    const suggestions = await findShadowRootElements(searchInput, By.css('li'));
+    const suggestions = await searchInput.findElements(By.css('li'));
     assert.lengthOf(suggestions, 10, 'should have 10 suggestions');
 
     const cardNamePromises = suggestions.map(async suggestion => await suggestion.getText());
@@ -63,17 +76,39 @@ describe('Search input', (): void => {
     assert.strictEqual(cardNames[6], 'Barbarian Hut');
     assert.strictEqual(cardNames[7], 'Barbarians');
     assert.strictEqual(cardNames[8], 'Bats');
-    assert.strictEqual(cardNames[9], 'Battle Ram');
+    assert.strictEqual(cardNames[9], 'Battle Healer');
 
     input.clear();
   }).timeout(6500);
 
-  it('should should push a result to top if result starts with the query', async (): Promise<void> => {
-    const searchInput = await driver.findElement(By.tagName('search-input'));
-    const input = await findShadowRootElement(searchInput, By.tagName('input'));
+  it('should should push a result to top if result starts with the query (test with "z")', async (): Promise<void> => {
+    const searchInput = await findShadowRootElement(homepage, By.tagName('search-input'));
+    const input = await searchInput.findElement(By.tagName('input'));
+    await input.clear();
+    await input.sendKeys('z');
+
+    const suggestions = await searchInput.findElements(By.css('li'));
+
+    const cardNamePromises = suggestions.map(async suggestion => await suggestion.getText());
+    const cardNames = await Promise.all(cardNamePromises);
+
+    assert.lengthOf(cardNames, 6);
+
+    assert.strictEqual(cardNames[0], 'Zap');
+    assert.strictEqual(cardNames[1], 'Zappies');
+    assert.strictEqual(cardNames[2], 'Electro Wizard');
+    assert.strictEqual(cardNames[3], 'Freeze');
+    assert.strictEqual(cardNames[4], 'Ice Wizard');
+    assert.strictEqual(cardNames[5], 'Wizard');
+  }).timeout(6500);
+
+  it('should should push a result to top if result starts with the query (test with "g")', async (): Promise<void> => {
+    const searchInput = await findShadowRootElement(homepage, By.tagName('search-input'));
+    const input = await searchInput.findElement(By.tagName('input'));
+    await input.clear();
     await input.sendKeys('g');
 
-    const suggestions = await findShadowRootElements(searchInput, By.css('li'));
+    const suggestions = await searchInput.findElements(By.css('li'));
 
     const cardNamePromises = suggestions.map(async suggestion => await suggestion.getText());
     const cardNames = await Promise.all(cardNamePromises);
@@ -83,10 +118,33 @@ describe('Search input', (): void => {
     assert.strictEqual(cardNames[2], 'Giant Snowball');
     assert.strictEqual(cardNames[3], 'Goblin Barrel');
     assert.strictEqual(cardNames[4], 'Goblin Cage');
-    assert.strictEqual(cardNames[5], 'Baby Dragon');
-    assert.strictEqual(cardNames[6], 'Dart Goblin');
-    assert.strictEqual(cardNames[7], 'Electro Dragon');
-    assert.strictEqual(cardNames[8], 'Elixir Golem');
-    assert.strictEqual(cardNames[9], 'Flying Machine');
+    assert.strictEqual(cardNames[5], 'Goblin Gang');
+    assert.strictEqual(cardNames[6], 'Goblin Giant');
+    assert.strictEqual(cardNames[7], 'Goblin Hut');
+    assert.strictEqual(cardNames[8], 'Goblins');
+    assert.strictEqual(cardNames[9], 'Golem');
+  }).timeout(6500);
+
+  it('should should push a result to top if result starts with the query (test with "S")', async (): Promise<void> => {
+    const searchInput = await findShadowRootElement(homepage, By.tagName('search-input'));
+    const input = await searchInput.findElement(By.tagName('input'));
+    await input.clear();
+    await input.sendKeys('S');
+
+    const suggestions = await searchInput.findElements(By.css('li'));
+
+    const cardNamePromises = suggestions.map(async suggestion => await suggestion.getText());
+    const cardNames = await Promise.all(cardNamePromises);
+
+    assert.strictEqual(cardNames[0], 'Skeleton Army');
+    assert.strictEqual(cardNames[1], 'Skeleton Barrel');
+    assert.strictEqual(cardNames[2], 'Skeletons');
+    assert.strictEqual(cardNames[3], 'Sparky');
+    assert.strictEqual(cardNames[4], 'Spear Goblins');
+    assert.strictEqual(cardNames[5], 'Archers');
+    assert.strictEqual(cardNames[6], 'Arrows');
+    assert.strictEqual(cardNames[7], 'Barbarians');
+    assert.strictEqual(cardNames[8], 'Bats');
+    assert.strictEqual(cardNames[9], 'Elite Barbarians');
   }).timeout(6500);
 });

@@ -1,7 +1,7 @@
 import { assert } from 'chai';
 import sinon from 'sinon';
 import fs from 'fs';
-import {knightCard, babyDragaonCard} from '../../_test_utilities/_cards.utils';
+import {firstFifteenCards} from '../../_test_utilities/_cards.utils';
 
 import CardsController from '../../../server/controllers/CardsController';
 import cardsUtils from '../../../server/utilities/cardsUtils';
@@ -9,8 +9,7 @@ import cardsUtils from '../../../server/utilities/cardsUtils';
 import config from '../../../config';
 const testOutputDir = config.cardsFileDir;
 
-const mockCards = [knightCard, babyDragaonCard];
-const mockCardsStr = JSON.stringify(mockCards);
+const firstFifteenCardsStr = JSON.stringify(firstFifteenCards);
 
 let getFake;
 
@@ -22,7 +21,7 @@ describe('CardsController', (): void => {
       fs.unlinkSync(testOutputDir);
     }
 
-    getFake = sinon.fake.returns(mockCards); // mockCards are the cards from Royale API
+    getFake = sinon.fake.returns(firstFifteenCards); // mockCards are the cards from Royale API
     sinon.replace(cardsUtils, 'get', getFake);
   });
 
@@ -48,8 +47,8 @@ describe('CardsController', (): void => {
           sinon.assert.calledOnce(getFake);
 
           assert(Array.isArray(response), "should return an array");
-          assert.lengthOf(response, mockCards.length);
-          assert.sameDeepMembers(response, mockCards);
+          assert.lengthOf(response, firstFifteenCards.length);
+          assert.sameDeepMembers(response, firstFifteenCards);
         }
       }
 
@@ -72,10 +71,10 @@ describe('CardsController', (): void => {
           assert(Array.isArray(response), "should return an array");
 
           assert.lengthOf(cardsFromFile, response.length);
-          assert.lengthOf(cardsFromFile, mockCards.length);
+          assert.lengthOf(cardsFromFile, firstFifteenCards.length);
 
           assert.sameDeepMembers(cardsFromFile, response);
-          assert.sameDeepMembers(cardsFromFile, mockCards);
+          assert.sameDeepMembers(cardsFromFile, firstFifteenCards);
         }
       }
 
@@ -83,9 +82,9 @@ describe('CardsController', (): void => {
     });
 
     it('getCards() should not fetch if file already exists', (done): void => {
-      fs.writeFileSync(testOutputDir, mockCardsStr);
+      fs.writeFileSync(testOutputDir, firstFifteenCardsStr);
 
-      const readCardsFileFake = sinon.fake.returns(mockCards); // returns mockCards because file exists
+      const readCardsFileFake = sinon.fake.returns(firstFifteenCards); // returns mockCards because file exists
       sinon.replace(cardsUtils, 'readCardsFile', readCardsFileFake);
 
       const writeCardsFileFake = sinon.fake();
@@ -103,9 +102,9 @@ describe('CardsController', (): void => {
           const cardsFromFile: {}[] = JSON.parse(fileData);
 
           assert(Array.isArray(cardsFromFile));
-          assert.lengthOf(cardsFromFile, mockCards.length);
+          assert.lengthOf(cardsFromFile, firstFifteenCards.length);
           assert.lengthOf(cardsFromFile, response.length);
-          assert.sameDeepMembers(cardsFromFile, mockCards);
+          assert.sameDeepMembers(cardsFromFile, firstFifteenCards);
           assert.sameDeepMembers(cardsFromFile, response);
         }
       }
