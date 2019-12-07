@@ -1,6 +1,8 @@
 import Cards from '../models/Cards';
 import Game from '../models/Game';
 
+const removePunctionations = (str: string) => str.replace(/[^0-9a-z\s]/gi, '');
+
 export default class SearchInput extends HTMLElement {
   search: string;
   value?: string;
@@ -18,8 +20,8 @@ export default class SearchInput extends HTMLElement {
   }
 
   suggestionSortFunc(a: string, b: string, searchStr: string): number{
-    const aStartsWith = a.toLowerCase().startsWith(searchStr);
-    const bStartsWith = b.toLowerCase().startsWith(searchStr);
+    const aStartsWith = removePunctionations(a.toLowerCase()).startsWith(searchStr);
+    const bStartsWith = removePunctionations(b.toLowerCase()).startsWith(searchStr);
 
     if (aStartsWith && !bStartsWith) return -1;
     if (!aStartsWith && bStartsWith) return 1;
@@ -28,9 +30,11 @@ export default class SearchInput extends HTMLElement {
 
   sortSuggestions(value, cardNames){
     const searchRegex = new RegExp(value, "i"); // Case insensitive regex search
-    const suggestions = cardNames.filter(name => searchRegex.test(name));
+    const suggestions = cardNames.filter(name => {
+      return searchRegex.test(removePunctionations(name));
+    });
 
-    return suggestions.sort((a,b) => this.suggestionSortFunc(a,b, value)).slice(0,24);
+    return suggestions.sort((a,b) => this.suggestionSortFunc(a,b, value)).slice(0,20);
   }
 
   onSuggestionClick = (key) => {
@@ -44,7 +48,9 @@ export default class SearchInput extends HTMLElement {
     this.search = e.target.value.trim();
     this.value = this.search;
 
-    const suggestions = this.sortSuggestions(this.value.toLowerCase(), this.cardNames);
+    const parsedVal = removePunctionations(this.value.toLowerCase());
+
+    const suggestions = this.sortSuggestions(parsedVal, this.cardNames);
 
     let div = document.createElement("div");
     div.className = "suggestions"
