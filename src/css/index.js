@@ -1,5 +1,9 @@
 export default `
 <style>
+  h1 {
+    margin-bottom: 0;
+  }
+
   .suggestions, .playedCards {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
@@ -24,7 +28,25 @@ export default `
     font-size: 18px;
   }
 
-  button {
+  .elixirCounter{
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .elixirCounter h3{
+    margin: 0 20px;
+    font-size: 40px;
+  }
+
+  .elixirCounter .buttonsWrapper {
+    display: flex;
+  }
+
+  .elixirCounter .buttons{
+    margin-top: auto;
+  }
+
+  .elixirCounter button {
     width: 36px;
     font-size: 16px;
     padding: 4px;

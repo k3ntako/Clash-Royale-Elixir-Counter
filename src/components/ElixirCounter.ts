@@ -18,17 +18,26 @@ export default class ElixirCounter extends HTMLElement {
 
   render() {
     const div = document.createElement("div");
+    div.className = "elixirCounter"
 
-    const h3 = document.createElement("h3");
-    h3.innerText = "0";
-    div.appendChild(h3);
-
+    const buttonsDiv = document.createElement("div");
+    buttonsDiv.className = "buttons";
     for (let i = 0; i <= 10; i++){
       const button = document.createElement("elixir-setter-button");
       button.innerText = String(i);
       button.onclick = () => this.game.setElixir(i);
-      div.appendChild(button);
+      buttonsDiv.appendChild(button);
     }
+
+    const buttonsWrapperDiv = document.createElement("div");
+    buttonsWrapperDiv.className = "buttonsWrapper";
+    buttonsWrapperDiv.append(buttonsDiv);
+    div.append(buttonsWrapperDiv);
+
+
+    const h3 = document.createElement("h3");
+    h3.innerText = "0";
+    div.appendChild(h3);
 
     this.append(div);
   }
