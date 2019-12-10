@@ -1,11 +1,15 @@
 export default `
 <style>
-  .suggestions {
+  .suggestions, .playedCards {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
     grid-row-gap: 24px;
   }
-  .suggestion {
+  .playedCards {
+    margin-top: 18px;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+  }
+  .cr-card {
     display: flex;
     flex-direction: column;
     text-align: center;

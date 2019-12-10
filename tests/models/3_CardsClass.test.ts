@@ -75,11 +75,20 @@ describe('Cards', (): void => {
     });
   });
 
-  describe('.getCardByKey', (): void => {
-    it('should convert name to ID', () => {
+  describe('.keyFromName', (): void => {
+    it('should convert card name to key without accessing the cards array', () => {
       allCards.forEach(card => {
         const key = Cards.keyFromName(card.name);
         assert.strictEqual(key, card.key);
+      });
+    });
+  });
+
+  describe('.nameFromKey', (): void => {
+    it('should convert card key to name without accessing the cards array', () => {
+      allCards.forEach(card => {
+        const key = Cards.nameFromKey(card.key);
+        assert.strictEqual(key, card.name);
       });
     });
   });

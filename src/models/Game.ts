@@ -5,11 +5,15 @@ export default class Game {
   timer: NodeJS.Timeout | null;
   onElixirChange: Function;
   cards: Cards;
+  playedCards: string[];
+  onPlayedCardsChangedCBs: Function[];
   constructor(cards){
     this.elixir = 0;
     this.timer = null;
     this.onElixirChange = () => {};
     this.cards = cards;
+    this.playedCards = [];
+    this.onPlayedCardsChangedCBs = [];
   }
 
   getElixir(): number{
@@ -32,6 +36,14 @@ export default class Game {
     // if less than 0, don't do anything
   }
 
+  registerOnPlayedCardsChanged(cb){
+    this.onPlayedCardsChangedCBs.push(cb);
+  }
+
+  onPlayedCardsChanged(){
+    this.onPlayedCardsChangedCBs.forEach(cb => cb());
+  }
+
   subtractElixir(elixir: number): void {
     this.addElixir(-1 * elixir);
   }
@@ -42,6 +54,10 @@ export default class Game {
     const newElixir: number = this.elixir - card.elixir;
     if (newElixir >= 0) {
       this.setElixir(newElixir);
+      if(!this.playedCards.includes(key)){
+        this.playedCards.push(key);
+        this.onPlayedCardsChanged();
+      }
     }
   }
 

@@ -114,5 +114,13 @@ describe('Game class', (): void => {
       game.playCard(knightCard.key);
       assert.strictEqual(game.getElixir(), 2);
     });
+
+    it('should add card to playedCards', async (): Promise<void>=> {
+      const game = await Game.initialize();
+      game.setElixir(10);
+      game.playCard(knightCard.key);
+
+      assert.include(game.playedCards, knightCard.key);
+    });
   });
 });

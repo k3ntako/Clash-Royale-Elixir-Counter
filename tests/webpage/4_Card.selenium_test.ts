@@ -26,7 +26,7 @@ describe('Search input', (): void => {
     await input.sendKeys('skEl');
 
     // click on first suggestion
-    const suggestions = await searchInput.findElements(By.className('suggestion'));
+    const suggestions = await searchInput.findElements(By.tagName('cr-card'));
     await suggestions[0].click();
 
     const opponentElixir = await elixirCounter.findElement(By.tagName('h3'));
@@ -45,7 +45,7 @@ describe('Search input', (): void => {
     await input.sendKeys('skEl');
 
     // click on first suggestion
-    const suggestions = await searchInput.findElements(By.className('suggestion'));
+    const suggestions = await searchInput.findElements(By.tagName('cr-card'));
     await suggestions[0].click();
 
     for( let suggestion of suggestions){

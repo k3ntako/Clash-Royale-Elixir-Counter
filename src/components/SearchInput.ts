@@ -37,8 +37,8 @@ export default class SearchInput extends HTMLElement {
     return suggestions.sort((a,b) => this.suggestionSortFunc(a,b, value)).slice(0,20);
   }
 
-  onSuggestionClick = (key) => {
-    this.game.playCard(key);
+  onCardClick = (cardName) => {
+    this.game.playCard(Cards.keyFromName(cardName));
   }
 
   onChange = (e: any) => {
@@ -55,19 +55,12 @@ export default class SearchInput extends HTMLElement {
     let div = document.createElement("div");
     div.className = "suggestions"
     suggestions.forEach(suggestion => {
-      let suggestionDiv = document.createElement("div");
-      suggestionDiv.className = "suggestion";
-      suggestionDiv.onclick = () => this.onSuggestionClick(Cards.keyFromName(suggestion));
+      let crCard = document.createElement("cr-card");
+      crCard.className = "suggestion";
+      crCard.onclick = () => this.onCardClick(suggestion);
+      crCard.innerText = suggestion;
 
-      let img = document.createElement("img")
-      img.src = `https://royaleapi.github.io/cr-api-assets/cards-75/${Cards.keyFromName(suggestion)}.png`
-      suggestionDiv.appendChild(img);
-
-      let span = document.createElement('span');
-      span.innerText = suggestion;
-      suggestionDiv.appendChild(span);
-
-      div.appendChild(suggestionDiv);
+      div.appendChild(crCard);
     });
 
     this.append(div);

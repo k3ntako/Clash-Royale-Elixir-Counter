@@ -1,6 +1,7 @@
 import Game from '../../src/models/Game';
 import { assert } from 'chai';
 import sinon from 'sinon';
+import { allCards } from '../_test_utilities/_cards.utils';
 
 describe('Game class', (): void => {
   describe('constructor', (): void => {
@@ -94,4 +95,22 @@ describe('Game class', (): void => {
       });
     }).timeout(6500); // extends timeout from 2000ms (default) to 6500 ms
   });
+
+  describe('#registerOnPlayedCardsChanged and #onPlayedCardsChanged', () => {
+    it('should call functions that were registered', async (): Promise<void> => {
+      const game = await Game.initialize();
+      const onPlayedCardsChangedSpy1 = sinon.spy();
+      const onPlayedCardsChangedSpy2 = sinon.spy();
+      game.registerOnPlayedCardsChanged(onPlayedCardsChangedSpy1);
+      game.registerOnPlayedCardsChanged(onPlayedCardsChangedSpy2);
+
+      assert.lengthOf(game.onPlayedCardsChangedCBs, 2);
+
+      game.setElixir(10);
+      game.playCard(allCards[3].key);
+
+      sinon.assert.calledOnce(onPlayedCardsChangedSpy1);
+      sinon.assert.calledOnce(onPlayedCardsChangedSpy2);
+    });
+  })
 });

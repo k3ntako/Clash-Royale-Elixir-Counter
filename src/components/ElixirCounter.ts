@@ -1,6 +1,4 @@
-import ElixirSetterButton from './ElixirSetterButton';
 import Game from '../models/Game';
-window.customElements.define('elixir-setter-button', ElixirSetterButton);
 
 
 export default class ElixirCounter extends HTMLElement {

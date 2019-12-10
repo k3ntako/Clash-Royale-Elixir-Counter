@@ -43,6 +43,18 @@ export default class Cards {
     return outputName.replace(periodRegex, "").toLowerCase();
   }
 
+  static nameFromKey = (key): string => {
+    if(key === 'x-bow') return 'X-Bow'; // X-Bow is the only name with hyphen
+
+    const nameArr = key.split("-").map(word => {
+      let name = word.charAt(0).toUpperCase() + word.slice(1);
+      name = name.replace('Pekka', 'P.E.K.K.A'); // the PEKKA and Mini PEKKA are the only ones with periods
+      return name;
+    });
+
+    return nameArr.join(" ");
+  }
+
   getCardByKey = (key) => {
     if (!this.cards.length){
       throw new Error('Cards not loaded');
