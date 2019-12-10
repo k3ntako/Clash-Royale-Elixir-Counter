@@ -19,23 +19,16 @@ describe('Game class', (): void => {
       game.timer && clearInterval(game.timer);
     });
 
-    it('should have a method called start that sets game.timer to an interval of 1000 ms', async (): Promise<void> => {
-      const game = await Game.initialize();
-      game.start();
-      assert.strictEqual(game.timer && game.timer._repeat, 2800);
-      game.stop();
-    });
-
     it('should add one elixir every 2.8 seconds when start is called', (done: Mocha.Done) => {
       Game.initialize().then(game => {
         game.start();
         return game;
       }).then(game =>  {
         setTimeout((): void => {
-          assert.strictEqual(game.getElixir(), 1);
+          assert.strictEqual(game.elixir, 1);
 
           setTimeout((): void => {
-            assert.strictEqual(game.getElixir(), 2);
+            assert.strictEqual(game.elixir, 2);
             game.stop();
             done();
           }, 2900);
@@ -43,7 +36,8 @@ describe('Game class', (): void => {
         }, 2900);
       });
     }).timeout(6500);
-
+  });
+  describe('#registerOnElixirChange', () => {
     it('should take a callback that is called when elixir count changes', (done: Mocha.Done) => {
       Game.initialize().then(game => {
         game.start();
@@ -51,7 +45,8 @@ describe('Game class', (): void => {
       }).then(game => {
         const onChangeSpy = sinon.spy();
 
-        game.start(onChangeSpy);
+        game.registerOnElixirChange(onChangeSpy)
+        game.start();
 
         setTimeout((): void => {
           assert.strictEqual(onChangeSpy.getCall(0).args[0], 1);

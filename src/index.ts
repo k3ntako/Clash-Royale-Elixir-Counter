@@ -40,7 +40,8 @@ export default class HomePage extends HTMLElement{
     div.appendChild(h1);
 
     this.elixirCounter = <ElixirCounter>document.createElement('elixir-counter');
-    this.game.start(this.elixirCounter.onChange);
+    this.game.registerOnElixirChange(this.elixirCounter.onChange);
+    this.game.start();
     this.elixirCounter.game = this.game;
     div.appendChild(this.elixirCounter);
 

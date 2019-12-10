@@ -25,7 +25,7 @@ export default class ElixirCounter extends HTMLElement {
     for (let i = 0; i <= 10; i++){
       const button = document.createElement("elixir-setter-button");
       button.innerText = String(i);
-      button.onclick = () => this.game.setElixir(i);
+      button.onclick = () => this.game.manualSetElixir(i);
       buttonsDiv.appendChild(button);
     }
 
