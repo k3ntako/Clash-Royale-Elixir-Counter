@@ -1,4 +1,4 @@
-import SearchInput from './components/SearchInput';
+import CardSearch from './components/CardSearch';
 import ElixirCounter from './components/ElixirCounter';
 import ElixirSetterButton from './components/ElixirSetterButton';
 import PlayedCards from './components/PlayedCards';
@@ -6,7 +6,7 @@ import CR_Card from './components/CR_Card';
 import Game from './models/Game';
 import css from './css';
 
-window.customElements.define('search-input', SearchInput);
+window.customElements.define('card-search', CardSearch);
 window.customElements.define('elixir-counter', ElixirCounter);
 window.customElements.define('played-cards', PlayedCards);
 window.customElements.define('cr-card', CR_Card);
@@ -16,7 +16,7 @@ window.customElements.define('elixir-setter-button', ElixirSetterButton);
 export default class HomePage extends HTMLElement{
   game: Game;
   elixirCounter?: ElixirCounter;
-  searchInput?: SearchInput;
+  cardSearch?: CardSearch;
   playedCards?: PlayedCards;
   constructor() {
     super();
@@ -48,12 +48,12 @@ export default class HomePage extends HTMLElement{
     this.playedCards.game = this.game;
     div.appendChild(this.playedCards);
 
-    this.searchInput = <SearchInput>document.createElement('search-input');
-    this.searchInput.cardNames = [];
-    this.searchInput.cardNames = this.game.cards.cardNames;
-    this.searchInput.game = this.game;
+    this.cardSearch = <CardSearch>document.createElement('card-search');
+    this.cardSearch.cardNames = [];
+    this.cardSearch.cardNames = this.game.cards.cardNames;
+    this.cardSearch.game = this.game;
 
-    div.appendChild(this.searchInput);
+    div.appendChild(this.cardSearch);
 
     this.shadowRoot && this.shadowRoot.appendChild(div);
   }

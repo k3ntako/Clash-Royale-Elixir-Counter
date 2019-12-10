@@ -4,15 +4,15 @@ import HomePage from '../../src';
 import Cards from '../../src/models/Cards';
 
 let homepage: HomePage;
-let searchInput, input, buttons, elixirCounter;
+let cardSearch, input, buttons, elixirCounter;
 
 
-describe('Search input', (): void => {
+describe('CardSearch', (): void => {
   beforeEach(async (): Promise<void> => {
     homepage = await driver.findElement(By.tagName('home-page'));
 
-    searchInput = await findShadowRootElement(homepage, By.tagName('search-input'));
-    input = await searchInput.findElement(By.tagName('input'));
+    cardSearch = await findShadowRootElement(homepage, By.tagName('card-search'));
+    input = await cardSearch.findElement(By.tagName('input'));
     input.clear();
 
     elixirCounter = await findShadowRootElement(homepage, By.tagName('elixir-counter'));
@@ -26,7 +26,7 @@ describe('Search input', (): void => {
     await input.sendKeys('skEl');
 
     // click on first suggestion
-    const suggestions = await searchInput.findElements(By.tagName('cr-card'));
+    const suggestions = await cardSearch.findElements(By.tagName('cr-card'));
     await suggestions[0].click();
 
     const opponentElixir = await elixirCounter.findElement(By.tagName('h3'));
@@ -45,7 +45,7 @@ describe('Search input', (): void => {
     await input.sendKeys('skEl');
 
     // click on first suggestion
-    const suggestions = await searchInput.findElements(By.tagName('cr-card'));
+    const suggestions = await cardSearch.findElements(By.tagName('cr-card'));
     await suggestions[0].click();
 
     for( let suggestion of suggestions){

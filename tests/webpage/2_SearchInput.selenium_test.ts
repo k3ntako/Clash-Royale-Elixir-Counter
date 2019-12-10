@@ -4,14 +4,14 @@ import HomePage from '../../src';
 
 let homepage: HomePage;
 
-describe('Search input', (): void => {
+describe('CardSearch', (): void => {
   beforeEach(async (): Promise<void> => {
     homepage = await driver.findElement(By.tagName('home-page'));
   });
 
   it('should have input where the "value" is updated with the user typing', async (): Promise<void> => {
-    const searchInput = await findShadowRootElement(homepage, By.tagName('search-input'));
-    const input = await searchInput.findElement(By.tagName('input'));
+    const cardSearch = await findShadowRootElement(homepage, By.tagName('card-search'));
+    const input = await cardSearch.findElement(By.tagName('input'));
 
     const placeholder = await input.getAttribute('placeholder');
 
@@ -24,11 +24,11 @@ describe('Search input', (): void => {
   }).timeout(6500);
 
   it('should suggests cards based on search term (case insensitive)', async (): Promise<void> => {
-    const searchInput = await findShadowRootElement(homepage, By.tagName('search-input'));
-    const input = await searchInput.findElement(By.tagName('input'));
+    const cardSearch = await findShadowRootElement(homepage, By.tagName('card-search'));
+    const input = await cardSearch.findElement(By.tagName('input'));
     await input.sendKeys('SKeleton');
 
-    const suggestions = await searchInput.findElements(By.className('suggestion'));
+    const suggestions = await cardSearch.findElements(By.className('suggestion'));
     assert.lengthOf(suggestions, 4, 'should have 4 suggestions');
 
     const cardNamePromises = suggestions.map(async suggestion => await suggestion.getText());
@@ -43,11 +43,11 @@ describe('Search input', (): void => {
   }).timeout(6500);
 
   it('should only suggest first 20 suggestions in alphabetical order', async (): Promise<void> => {
-    const searchInput = await findShadowRootElement(homepage, By.tagName('search-input'));
-    const input = await searchInput.findElement(By.tagName('input'));
+    const cardSearch = await findShadowRootElement(homepage, By.tagName('card-search'));
+    const input = await cardSearch.findElement(By.tagName('input'));
     await input.sendKeys('a');
 
-    const suggestions = await searchInput.findElements(By.className('suggestion'));
+    const suggestions = await cardSearch.findElements(By.className('suggestion'));
     assert.lengthOf(suggestions, 20, 'should have 20 suggestions');
 
     const cardNamePromises = suggestions.map(async suggestion => await suggestion.getText());
@@ -68,12 +68,12 @@ describe('Search input', (): void => {
   }).timeout(6500);
 
   it('should should push a result to top if result starts with the query (test with "z")', async (): Promise<void> => {
-    const searchInput = await findShadowRootElement(homepage, By.tagName('search-input'));
-    const input = await searchInput.findElement(By.tagName('input'));
+    const cardSearch = await findShadowRootElement(homepage, By.tagName('card-search'));
+    const input = await cardSearch.findElement(By.tagName('input'));
     await input.clear();
     await input.sendKeys('z');
 
-    const suggestions = await searchInput.findElements(By.className('suggestion'));
+    const suggestions = await cardSearch.findElements(By.className('suggestion'));
 
     const cardNamePromises = suggestions.map(async suggestion => await suggestion.getText());
     const cardNames = await Promise.all(cardNamePromises);
@@ -89,12 +89,12 @@ describe('Search input', (): void => {
   }).timeout(6500);
 
   it('should should push a result to top if result starts with the query (test with "g")', async (): Promise<void> => {
-    const searchInput = await findShadowRootElement(homepage, By.tagName('search-input'));
-    const input = await searchInput.findElement(By.tagName('input'));
+    const cardSearch = await findShadowRootElement(homepage, By.tagName('card-search'));
+    const input = await cardSearch.findElement(By.tagName('input'));
     await input.clear();
     await input.sendKeys('g');
 
-    const suggestions = await searchInput.findElements(By.className('suggestion'));
+    const suggestions = await cardSearch.findElements(By.className('suggestion'));
 
     const cardNamePromises = suggestions.map(async suggestion => await suggestion.getText());
     const cardNames = await Promise.all(cardNamePromises);
@@ -112,12 +112,12 @@ describe('Search input', (): void => {
   }).timeout(6500);
 
   it('should should push a result to top if result starts with the query (test with "S")', async (): Promise<void> => {
-    const searchInput = await findShadowRootElement(homepage, By.tagName('search-input'));
-    const input = await searchInput.findElement(By.tagName('input'));
+    const cardSearch = await findShadowRootElement(homepage, By.tagName('card-search'));
+    const input = await cardSearch.findElement(By.tagName('input'));
     await input.clear();
     await input.sendKeys('S');
 
-    const suggestions = await searchInput.findElements(By.className('suggestion'));
+    const suggestions = await cardSearch.findElements(By.className('suggestion'));
 
     const cardNamePromises = suggestions.map(async suggestion => await suggestion.getText());
     const cardNames = await Promise.all(cardNamePromises);

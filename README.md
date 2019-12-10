@@ -34,7 +34,7 @@ This was built using TDD and Typescript, and without heavy frameworks such as Re
 ```
 
 ## Testing the Royale API
-When sorting suggestions in SearchInput, it is hard to test with a subset of the cards and cover the edge cases. The test files have a saved version of all of the cards in `preset_test_cards.json`. In addition to new cards, Royale API mentions that their JSON structure may change.
+When sorting suggestions in CardSearch, it is hard to test with a subset of the cards and cover the edge cases. The test files have a saved version of all of the cards in `preset_test_cards.json`. In addition to new cards, Royale API mentions that their JSON structure may change.
 
 To assure that our data is up-to-date, we can use `npm run test-with-api-check` instead of `npm test`. This will run a test before all the other tests to compare the local data to the data returned by Royale API. Testing with the check is not the default because the cards are not expected to change very often. Currently (Dec 2019), a new card is added at most once a month.
 

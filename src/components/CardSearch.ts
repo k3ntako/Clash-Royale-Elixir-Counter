@@ -3,7 +3,7 @@ import Game from '../models/Game';
 
 const removePunctionations = (str: string) => str.replace(/[^0-9a-z\s]/gi, '');
 
-export default class SearchInput extends HTMLElement {
+export default class CardSearch extends HTMLElement {
   search: string;
   value?: string;
   cardNames: string[];
@@ -71,7 +71,7 @@ export default class SearchInput extends HTMLElement {
     input.setAttribute("type", "text");
     input.setAttribute("placeholder", "Search Cards");
     input.addEventListener('input', this.onChange);
-    input.classList.add("searchInput");
+    input.classList.add("cardSearch");
 
     this.append(input);
   }

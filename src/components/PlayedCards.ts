@@ -2,7 +2,7 @@
 import Cards from '../models/Cards';
 import Game from '../models/Game';
 
-export default class SearchInput extends HTMLElement {
+export default class PlayedCard extends HTMLElement {
   game: Game;
   constructor() {
     super();

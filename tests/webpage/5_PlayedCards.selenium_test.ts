@@ -4,7 +4,7 @@ import HomePage from '../../src';
 import { Driver } from 'selenium-webdriver/chrome';
 
 let homepage: HomePage;
-let playedCards, searchInput, input, buttons, elixirCounter;
+let playedCards, cardSearch, input, buttons, elixirCounter;
 
 
 describe('Played cards', (): void => {
@@ -13,8 +13,8 @@ describe('Played cards', (): void => {
 
     playedCards = await findShadowRootElement(homepage, By.tagName('played-cards'));
 
-    searchInput = await findShadowRootElement(homepage, By.tagName('search-input'));
-    input = await searchInput.findElement(By.tagName('input'));
+    cardSearch = await findShadowRootElement(homepage, By.tagName('card-search'));
+    input = await cardSearch.findElement(By.tagName('input'));
     input.clear();
 
     elixirCounter = await findShadowRootElement(homepage, By.tagName('elixir-counter'));
@@ -27,7 +27,7 @@ describe('Played cards', (): void => {
 
     await input.sendKeys('mini');
     // click on first suggestion
-    const suggestions = await searchInput.findElements(By.tagName('cr-card'));
+    const suggestions = await cardSearch.findElements(By.tagName('cr-card'));
     await suggestions[0].click();
 
     // find second card in played cards
