@@ -36,6 +36,7 @@ export default class ElixirCounter extends HTMLElement {
 
 
     const h3 = document.createElement("h3");
+    h3.id = "elixirCount";
     h3.innerText = "0";
     div.appendChild(h3);
 

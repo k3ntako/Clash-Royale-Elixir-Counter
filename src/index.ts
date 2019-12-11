@@ -27,6 +27,7 @@ export default class HomePage extends HTMLElement{
 
   async connectedCallback(){
     this.game = await Game.initialize();
+    this.game.start();
 
     this.render();
   }
@@ -41,7 +42,7 @@ export default class HomePage extends HTMLElement{
 
     this.elixirCounter = <ElixirCounter>document.createElement('elixir-counter');
     this.game.registerOnElixirChange(this.elixirCounter.onChange);
-    this.game.start();
+
     this.elixirCounter.game = this.game;
     div.appendChild(this.elixirCounter);
 

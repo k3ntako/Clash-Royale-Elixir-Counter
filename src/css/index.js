@@ -54,5 +54,29 @@ export default `
     border: 1px solid black;
     background-color: white;
   }
+
+  .notification{
+    position: absolute;
+    flex-direction: column;
+    display: flex;
+    top: 0;
+    left: 0;
+    height: 40px;
+    width: 100%;
+    text-align: center;
+    padding: 8px;
+    background: #da2d2d;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    color: white;
+    justify-content: center;
+  }
+
+  /* shake for elixir count on error */
+  @keyframes shake {
+    0% { transform: skewX(0deg); }
+    33% { transform: skewX(15deg); }
+    66% { transform: skewX(0deg); }
+    100% { transform: skewX(-15deg); }
+  }
 </style>
 `

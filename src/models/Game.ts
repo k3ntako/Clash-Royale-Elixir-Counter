@@ -23,6 +23,7 @@ export default class Game {
 
   // Timers
   start(): void{
+    this.stop();
     this.timer = setTimeout(this.addElixir.bind(this, 1), 2800);
   }
 
@@ -34,25 +35,31 @@ export default class Game {
   // Elixir
   private setElixir = (elixir: number): void => { // Only place where this.elixir should be changed
     this.elixir = elixir;
-    this.onElixirChangedCBs.forEach(cb => cb(elixir));
+    this.onElixirChanged(elixir);
   }
 
   manualSetElixir = (elixir: number) => { // elixir being set outside timer
     this.stop(); // stop exisiting timer
-    this.start(); // restart timer
+
+    elixir < 10 && this.start(); // restart timer if less than 10
     this.setElixir(elixir);
   }
 
-  private addElixir(elixir: number): void{
-    const newElixir: number = this.elixir + elixir;
-    if (newElixir > 10) {
-      this.setElixir(10);
-    } else if (newElixir >= 0) {
-      this.start();
-      this.setElixir(newElixir);
-    }
+  private addElixir = (elixir: number): void => {
+    if(typeof elixir !== 'number') throw new Error('Elixir has to be a number');
 
-    // if less than 0, don't do anything
+    const newElixir: number = this.elixir + elixir;
+
+    if (newElixir > 10) { // 10+
+      this.setElixir(10);
+      throw new Error('Elixir cannot be set to greater than 10');
+    } else if (newElixir >= 0) {  // 0 to 10
+      newElixir !== 10 && this.start();
+      this.setElixir(newElixir);
+    } else { // less than 0
+      // if less than 0, don't do anything
+      throw new Error('Not enough elixir');
+    }
   }
 
   private subtractElixir(elixir: number): void {
@@ -76,16 +83,19 @@ export default class Game {
     this.onPlayedCardsChangedCBs.forEach(cb => cb());
   }
 
-  playCard(key: string): void {
-    const card = this.cards.getCardByKey(key);
+  playCard(key: string, onErr: Function): void {
+    try{
+      const card = this.cards.getCardByKey(key);
+      this.subtractElixir(card.elixir);
 
-    const newElixir: number = this.elixir - card.elixir;
-    if (newElixir >= 0) {
-      this.setElixir(newElixir);
+      // this.subtractElixir() throws error if card was not played
+      // so following won't execute if card was not played
       if(!this.playedCards.includes(key)){
         this.playedCards.push(key);
         this.onPlayedCardsChanged();
       }
+    } catch (err) {
+      onErr(err);
     }
   }
 }

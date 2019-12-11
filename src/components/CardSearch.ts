@@ -38,7 +38,34 @@ export default class CardSearch extends HTMLElement {
   }
 
   onCardClick = (cardName) => {
-    this.game.playCard(Cards.keyFromName(cardName));
+    this.game.playCard(Cards.keyFromName(cardName), (err) => {
+      // Find webpage
+      const homePage = document.getElementsByTagName('home-page')[0];
+
+      // Attach error message
+      let errorDiv = document.createElement("div");
+      errorDiv.innerText = err.message;
+      errorDiv.className = "notification";
+      homePage.shadowRoot.append(errorDiv);
+
+      // Shake elixir count and turn it red
+      const elixirCount: Element = homePage.shadowRoot.querySelector('#elixirCount');
+      elixirCount.style.color = "#ff1111";
+      elixirCount.style.animation = "shake 0.15s";
+      elixirCount.style.animationIterationCount = "3";
+
+      // After 1 second, stop shake and return color to black
+      setTimeout(() => {
+        elixirCount.style.color = "#000";
+        elixirCount.style.animation = "";
+        elixirCount.style.animationIterationCount = "0";
+      }, 1000);
+
+      // After 1 second, remove error message
+      setTimeout(() => {
+        homePage.shadowRoot.removeChild(errorDiv);
+      }, 3000);
+    });
   }
 
   onChange = (e: any) => {
@@ -53,7 +80,7 @@ export default class CardSearch extends HTMLElement {
     const suggestions = this.sortSuggestions(parsedVal, this.cardNames);
 
     let div = document.createElement("div");
-    div.className = "suggestions"
+    div.className = "suggestions";
     suggestions.forEach(suggestion => {
       let crCard = document.createElement("cr-card");
       crCard.className = "suggestion";

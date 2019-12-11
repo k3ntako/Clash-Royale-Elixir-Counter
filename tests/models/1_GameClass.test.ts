@@ -47,18 +47,20 @@ describe('Game class', (): void => {
       assert.strictEqual(game.elixir, 3);
     });
 
-    it('should never allow elixir count to be more than 10', async (): Promise<void> => {
-      const game = await Game.initialize();
-      game.setElixir(9);
-      game.addElixir(2);
-      assert.isAtMost(game.elixir, 10);
-    });
-
     it('should set the field to 10 if the total is greater than 10', async (): Promise<void> => {
       const game = await Game.initialize();
+      const spy = sinon.spy(game, "addElixir");
       game.setElixir(9);
-      game.addElixir(2);
-      assert.strictEqual(game.elixir, 10);
+
+      try{
+        game.addElixir(2);
+        throw new Error('Should have thrown error above');
+      }catch( err ){
+        sinon.assert.threw(spy);
+        assert.strictEqual(err.message, "Elixir cannot be set to greater than 10");
+
+        assert.strictEqual(game.elixir, 10);
+      }
     });
   });
 
@@ -72,16 +74,34 @@ describe('Game class', (): void => {
 
     it('should never allow elixir count to be less than 0', async (): Promise<void>=> {
       const game = await Game.initialize();
+      const spy = sinon.spy(game, "subtractElixir");
+
       game.setElixir(2);
-      game.subtractElixir(3);
-      assert.isAtLeast(game.elixir, 0);
+      try {
+        game.subtractElixir(3);
+        throw new Error('Should have thrown error above');
+      } catch (error) {
+        sinon.assert.threw(spy);
+        assert.strictEqual(error.message, "Not enough elixir");
+
+        assert.isAtLeast(game.elixir, 0);
+      }
     });
 
     it('should not do anything, if the result would be less than 0', async (): Promise<void> => {
       const game = await Game.initialize();
+      const spy = sinon.spy(game, "subtractElixir");
+
       game.setElixir(2);
-      game.subtractElixir(3);
-      assert.strictEqual(game.elixir, 2);
+      try {
+        game.subtractElixir(3);
+        throw new Error('Should have thrown error above');
+      } catch (error) {
+        sinon.assert.threw(spy);
+        assert.strictEqual(error.message, "Not enough elixir");
+
+        assert.strictEqual(game.elixir, 2); // elixir should still be 2
+      }
     });
 
     it('should allow result to be 0', async (): Promise<void> => {
@@ -103,7 +123,10 @@ describe('Game class', (): void => {
     it('should not subtract any elixir if game.elixir is less than the elixir count provided', async (): Promise<void>=> {
       const game = await Game.initialize();
       game.setElixir(2);
-      game.playCard(knightCard.key);
+      game.playCard(knightCard.key, (err) => {
+        assert.instanceOf(err, Error);
+        assert.strictEqual(err.message, "Not enough elixir");
+      });
       assert.strictEqual(game.elixir, 2);
     });
 
