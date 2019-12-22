@@ -25,10 +25,6 @@ describe('CardsController', (): void => {
     sinon.replace(cardsUtils, 'get', getFake);
   });
 
-  afterEach((): void => {
-    sinon.restore();
-  })
-
   after((): void => {
     if (fs.existsSync(testOutputDir)) {
       fs.unlinkSync(testOutputDir); // deletes test output file after running the tests in this describe block

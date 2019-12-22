@@ -1,19 +1,33 @@
-import { ICardInfoResponse } from '../utilities/interfaces';
 import Cards from './Cards';
+import Timer from './Timer';
 export default class Game {
   elixir: number;
-  timer: NodeJS.Timeout | null;
+  timer: Timer;
   cards: Cards;
   playedCards: string[];
   onElixirChangedCBs: Function[];
   onPlayedCardsChangedCBs: Function[];
+  onIntervalChangedCBs: Function[];
+  intervalLength: number;
+  singleSpeed: Function;
+  doubleSpeed: Function;
+  tripleSpeed: Function;
   constructor(cards){
-    this.elixir = 0;
-    this.timer = null;
-    this.cards = cards;
+    const timer = new Timer();
+    timer.registerOnElixir(this.onElixir);
+    timer.registerOnInterval(this.onInterval);
+
+    this.timer = timer;
+    this.elixir = 5; // opponent's elixir count
+    this.cards = cards; // Cards class
     this.playedCards = [];
     this.onPlayedCardsChangedCBs = [];
     this.onElixirChangedCBs = [];
+    this.onIntervalChangedCBs = [];
+
+    this.singleSpeed = this.timer.singleSpeed;
+    this.doubleSpeed = this.timer.doubleSpeed;
+    this.tripleSpeed = this.timer.tripleSpeed;
   }
 
   static async initialize(): Promise<Game>{
@@ -22,27 +36,46 @@ export default class Game {
   }
 
   // Timers
-  start(): void{
-    this.stop();
-    this.timer = setTimeout(this.addElixir.bind(this, 1), 2800);
+  onElixir = () => {
+    this.addElixir(1);
   }
 
-  stop(): void {
-    this.timer && clearTimeout(this.timer);
-    this.timer = null;
+  onInterval = (timePassed: number, oneElixirTime: number) => {
+    this.onIntervalChanged(this.elixir, timePassed, oneElixirTime);
+  }
+
+  start(): void{
+    this.timer.start();
+  }
+
+  stop(): void{
+    this.timer.stop();
   }
 
   // Elixir
   private setElixir = (elixir: number): void => { // Only place where this.elixir should be changed
+    if(this.timer.running && elixir >= 10){
+      this.stop();
+    }else if(!this.timer.running && elixir < 10){
+      this.start();
+    }
+
     this.elixir = elixir;
     this.onElixirChanged(elixir);
   }
 
   manualSetElixir = (elixir: number) => { // elixir being set outside timer
-    this.stop(); // stop exisiting timer
+    this.stop();
+     this.setElixir(elixir);
 
-    elixir < 10 && this.start(); // restart timer if less than 10
-    this.setElixir(elixir);
+    if (elixir < 10) {
+      this.start(); // restart timer if less than 10
+    } else if (elixir ===  10){
+      // if user selects 10, the onChange functions are not called because they are triggered by the timer.
+      // this manually triggers the onChange function once
+      this.onElixirChanged(this.elixir);
+      this.onIntervalChanged(this.elixir, 0, this.timer.oneElixirTime);
+    }
   }
 
   private addElixir = (elixir: number): void => {
@@ -54,7 +87,6 @@ export default class Game {
       this.setElixir(10);
       throw new Error('Elixir cannot be set to greater than 10');
     } else if (newElixir >= 0) {  // 0 to 10
-      newElixir !== 10 && this.start();
       this.setElixir(newElixir);
     } else { // less than 0
       // if less than 0, don't do anything
@@ -66,12 +98,20 @@ export default class Game {
     this.addElixir(-1 * elixir);
   }
 
-  registerOnElixirChange(onElixirChange?: Function): void{
-    this.onElixirChangedCBs.push(onElixirChange)
+  registerOnElixirChange(onElixirChange: Function): void{
+    this.onElixirChangedCBs.push(onElixirChange);
   }
 
   private onElixirChanged(elixir: number){
     this.onElixirChangedCBs.forEach(cb => cb(elixir));
+  }
+
+  registerOnIntervalChange(onIntervalChange: Function): void{
+    this.onIntervalChangedCBs.push(onIntervalChange);
+  }
+
+  private onIntervalChanged(elixir: number, timePassed: number, oneElixirTime: number){
+    this.onIntervalChangedCBs.forEach(cb => cb(elixir, timePassed, oneElixirTime));
   }
 
   // Cards

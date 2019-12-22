@@ -1,6 +1,5 @@
 import CardSearch from './components/CardSearch';
 import ElixirCounter from './components/ElixirCounter';
-import ElixirSetterButton from './components/ElixirSetterButton';
 import PlayedCards from './components/PlayedCards';
 import CR_Card from './components/CR_Card';
 import Game from './models/Game';
@@ -10,7 +9,6 @@ window.customElements.define('card-search', CardSearch);
 window.customElements.define('elixir-counter', ElixirCounter);
 window.customElements.define('played-cards', PlayedCards);
 window.customElements.define('cr-card', CR_Card);
-window.customElements.define('elixir-setter-button', ElixirSetterButton);
 
 
 export default class HomePage extends HTMLElement{

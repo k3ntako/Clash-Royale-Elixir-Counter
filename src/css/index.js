@@ -55,6 +55,35 @@ export default `
     background-color: white;
   }
 
+  .elixir-setter-buttons button.filled {
+    color: white;
+    background-image: linear-gradient(0, rgb(172,53,189), rgb(224,143,236));
+  }
+
+  .elixir-setter-buttons button.partially-filled {
+    position: relative;
+    background-color: rgba(255, 255, 255, 0); /* transparent background */
+  }
+
+  .fill {
+    position: absolute;
+    background-image: linear-gradient(0, rgb(172,53,189), rgb(224,143,236));
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: -1;
+    width: 0.67%;
+  }
+
+  .elixirCounter .speed-buttons {
+    margin-left: 36px;
+  }
+
+  .elixirCounter .speed-buttons .active {
+    background-color: #000;
+    color: #fff;
+  }
+
   .notification{
     position: absolute;
     flex-direction: column;

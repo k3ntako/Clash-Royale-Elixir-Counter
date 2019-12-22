@@ -1,7 +1,6 @@
 import Timer from '../../src/models/Timer';
 import { assert } from 'chai';
 import sinon from 'sinon';
-import { allCards } from '../_test_utilities/_cards.utils';
 
 describe('Game class', (): void => {
   describe('#registerOnInterval and #onInterval', (): void => {
@@ -28,8 +27,8 @@ describe('Game class', (): void => {
     }).timeout(6500);
   });
 
-  describe('start', (): void => {
-    it('should should call onInterval every 100ms, and call onElixir every 2800ms', (done: Mocha.Done): void => {
+  describe('start', function (): void {
+    it('should should call onInterval every 70ms, and call onElixir every 2800ms', function (done: Mocha.Done): void {
       const timer = new Timer();
       const onElixirSpy = sinon.spy();
       const onIntervalSpy = sinon.spy();
@@ -40,15 +39,18 @@ describe('Game class', (): void => {
       timer.start();
 
       // onInterval is called every 100 ms, but onElixir is called every 2800ms
-      setTimeout(() => sinon.assert.calledOnce(onIntervalSpy), 150);
-      setTimeout(() => sinon.assert.notCalled(onElixirSpy), 200);
+      setTimeout(() => sinon.assert.calledOnce(onIntervalSpy), 80);
+      setTimeout(() => sinon.assert.notCalled(onElixirSpy), 80);
 
-      setTimeout(() => sinon.assert.calledOnce(onElixirSpy), 2900);
-      setTimeout(() => sinon.assert.calledTwice(onElixirSpy), 5800);
-      setTimeout(() => assert.isAtLeast(onIntervalSpy.callCount, 54), 5800);
+      setTimeout(() => sinon.assert.calledOnce(onElixirSpy), 3000);
+      setTimeout(() => sinon.assert.calledTwice(onElixirSpy), 6000);
+      setTimeout(() => assert.isAtLeast(onIntervalSpy.callCount, 70), 6000);
 
-      setTimeout(() => done(), 6000);
-    }).timeout(6500);
+      setTimeout(() => {
+        timer.stop();
+        done();
+      }, 6500);
+    }).timeout(7500);
   });
 
   describe('stop', (): void => {
@@ -87,9 +89,12 @@ describe('Game class', (): void => {
       timer.doubleSpeed();
 
       setTimeout(() => sinon.assert.calledOnce(onElixirSpy), 1500);
-      setTimeout(() => sinon.assert.calledTwice(onElixirSpy), 2900);
+      setTimeout(() => sinon.assert.calledTwice(onElixirSpy), 3000);
 
-      setTimeout(() => done(), 2950);
+      setTimeout(() => {
+        timer.stop();
+        done();
+      }, 2950);
     }).timeout(3000);
   });
 
@@ -103,10 +108,13 @@ describe('Game class', (): void => {
       timer.start();
       timer.tripleSpeed();
 
-      setTimeout(() => sinon.assert.calledOnce(onElixirSpy), 800);
-      setTimeout(() => sinon.assert.calledTwice(onElixirSpy), 1500);
+      setTimeout(() => sinon.assert.calledOnce(onElixirSpy), 900);
+      setTimeout(() => sinon.assert.calledTwice(onElixirSpy), 1800);
 
-      setTimeout(() => done(), 1600);
+      setTimeout(() => {
+        timer.stop();
+        done();
+      }, 1600);
     })
   });
 });

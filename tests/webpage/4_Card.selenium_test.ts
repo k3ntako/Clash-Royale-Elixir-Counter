@@ -16,7 +16,8 @@ describe('CardSearch', (): void => {
     input.clear();
 
     elixirCounter = await findShadowRootElement(homepage, By.tagName('elixir-counter'));
-    buttons = await elixirCounter.findElements(By.tagName('elixir-setter-button'));
+    const buttonsDiv = await elixirCounter.findElement(By.className('elixir-setter-buttons'));
+    buttons = await buttonsDiv.findElements(By.tagName('button'));
   });
 
   it('should subtract the cost of the card selected from opponent elixir', async (): Promise<void> => {
