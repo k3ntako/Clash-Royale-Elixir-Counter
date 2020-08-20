@@ -108,4 +108,4 @@ export default `
     100% { transform: skewX(-15deg); }
   }
 </style>
-`
+`;

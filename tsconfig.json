@@ -1,21 +1,12 @@
 {
   "compilerOptions": {
-    "lib": [
-      "es6",
-      "dom"
-    ],
+    "lib": ["es6", "dom"],
     "target": "es6",
     "module": "commonjs",
     "outDir": "./dist",
     "strict": false,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "types": [
-      "node",
-      "mocha",
-      "chai",
-      "express",
-      "selenium-webdriver"
-    ]
+    "types": ["node", "mocha", "chai", "express", "selenium-webdriver"]
   }
 }

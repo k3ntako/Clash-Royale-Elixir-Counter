@@ -1,10 +1,10 @@
-import Timer from '../../src/models/Timer';
-import { assert } from 'chai';
-import sinon from 'sinon';
+import Timer from "../../src/models/Timer";
+import { assert } from "chai";
+import sinon from "sinon";
 
-describe('Game class', (): void => {
-  describe('#registerOnInterval and #onInterval', (): void => {
-    it('should register a callback and call it', (): void => {
+describe("Game class", (): void => {
+  describe("#registerOnInterval and #onInterval", (): void => {
+    it("should register a callback and call it", (): void => {
       const timer = new Timer();
       const onElixirSpy = sinon.spy();
 
@@ -15,8 +15,8 @@ describe('Game class', (): void => {
     }).timeout(6500);
   });
 
-  describe('#registerOnElixir and #onElixir', (): void => {
-    it('should register a callback and call it', (): void => {
+  describe("#registerOnElixir and #onElixir", (): void => {
+    it("should register a callback and call it", (): void => {
       const timer = new Timer();
       const onIntervalSpy = sinon.spy();
 
@@ -27,8 +27,8 @@ describe('Game class', (): void => {
     }).timeout(6500);
   });
 
-  describe('start', function (): void {
-    it('should should call onInterval every 70ms, and call onElixir every 2800ms', function (done: Mocha.Done): void {
+  describe("start", function (): void {
+    it("should should call onInterval every 70ms, and call onElixir every 2800ms", function (done: Mocha.Done): void {
       const timer = new Timer();
       const onElixirSpy = sinon.spy();
       const onIntervalSpy = sinon.spy();
@@ -53,8 +53,8 @@ describe('Game class', (): void => {
     }).timeout(7500);
   });
 
-  describe('stop', (): void => {
-    it('should stop timers and not call any more onInterval or onElixir', (done: Mocha.Done): void => {
+  describe("stop", (): void => {
+    it("should stop timers and not call any more onInterval or onElixir", (done: Mocha.Done): void => {
       const timer = new Timer();
       const onElixirSpy = sinon.spy();
       const onIntervalSpy = sinon.spy();
@@ -78,8 +78,8 @@ describe('Game class', (): void => {
     }).timeout(6500);
   });
 
-  describe('#doubleSpeed', (): void => {
-    it('should call onElixir every 1.4 secs', (done: Mocha.Done): void => {
+  describe("#doubleSpeed", (): void => {
+    it("should call onElixir every 1.4 secs", (done: Mocha.Done): void => {
       const timer = new Timer();
       const onElixirSpy = sinon.spy();
 
@@ -98,8 +98,8 @@ describe('Game class', (): void => {
     }).timeout(3000);
   });
 
-  describe('#tripleSpeed', (): void => {
-    it('should call onElixir every 0.7 secs', (done: Mocha.Done): void => {
+  describe("#tripleSpeed", (): void => {
+    it("should call onElixir every 0.7 secs", (done: Mocha.Done): void => {
       const timer = new Timer();
       const onElixirSpy = sinon.spy();
 
@@ -115,6 +115,6 @@ describe('Game class', (): void => {
         timer.stop();
         done();
       }, 1600);
-    })
+    });
   });
 });

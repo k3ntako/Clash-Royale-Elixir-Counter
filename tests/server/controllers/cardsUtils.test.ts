@@ -1,18 +1,15 @@
-import cardsUtils from '../../../server/utilities/cardsUtils';
-import { assert } from 'chai';
-import fs from 'fs';
-import {ICardInfoResponse} from '../../../server/types/interfaces';
-import { firstFifteenCards } from '../../_test_utilities/_cards.utils';
-
-
+import cardsUtils from "../../../server/utilities/cardsUtils";
+import { assert } from "chai";
+import fs from "fs";
+import { ICardInfoResponse } from "../../../server/types/interfaces";
+import { firstFifteenCards } from "../../_test_utilities/_cards.utils";
 
 const firstFifteenCardsStr = JSON.stringify(firstFifteenCards);
 
-import config from '../../../config';
+import config from "../../../config";
 const testOutputDir = config.cardsFileDir;
 
-
-describe('cardsUtils', (): void => {
+describe("cardsUtils", (): void => {
   before((): void => {
     // deletes test output file before running the tests in this describe block
     // This is just in case. The after() should have deleted it after the previous run.
@@ -27,13 +24,13 @@ describe('cardsUtils', (): void => {
     }
   });
 
-  describe('.readCardsFile', (): void => {
-    it('should return null', (): void => {
+  describe(".readCardsFile", (): void => {
+    it("should return null", (): void => {
       const data = cardsUtils.readCardsFile();
       assert.strictEqual(data, null);
     });
 
-    it('should read card info from file', (): void => {
+    it("should read card info from file", (): void => {
       cardsUtils.writeCardsFile(firstFifteenCardsStr);
 
       const cardsJSON: ICardInfoResponse[] | null = cardsUtils.readCardsFile();
@@ -43,8 +40,8 @@ describe('cardsUtils', (): void => {
     });
   });
 
-  describe('.writeCardsFile', (): void => {
-    it('should writes string to a file', (): void => {
+  describe(".writeCardsFile", (): void => {
+    it("should writes string to a file", (): void => {
       cardsUtils.writeCardsFile(firstFifteenCardsStr);
 
       const data: string = fs.readFileSync(testOutputDir, "utf8");

@@ -1,18 +1,16 @@
-const { Builder, By } = require('selenium-webdriver');
-const driver = new Builder()
-  .forBrowser('chrome')
-  .build();
+const { Builder, By } = require("selenium-webdriver");
+const driver = new Builder().forBrowser("chrome").build();
 
 const getShadowRoot = async (elem) => {
   return await driver.executeScript("return arguments[0].shadowRoot", elem);
-}
+};
 const findShadowRootElements = async (elem, locator): Promise<Array<any>> => {
   const shadowRoot = await getShadowRoot(elem);
   return await shadowRoot.findElements(locator);
-}
+};
 const findShadowRootElement = async (elem, locator): Promise<any> => {
   return (await findShadowRootElements(elem, locator))[0];
-}
+};
 
 before(async function (): Promise<void> {
   // Sets timeout to get webpage to 5 secs
@@ -29,19 +27,20 @@ before(async function (): Promise<void> {
   });
 
   // Get the webpage
-  await driver.get('http://localhost:3000');
+  await driver.get("http://localhost:3000");
 });
 
-after(async (): Promise<void> => {
-  await driver.quit();
-});
+after(
+  async (): Promise<void> => {
+    await driver.quit();
+  }
+);
 
-
-import fetchMock from 'fetch-mock';
-import { allCards } from '../_test_utilities/_cards.utils';
+import fetchMock from "fetch-mock";
+import { allCards } from "../_test_utilities/_cards.utils";
 
 beforeEach(() => {
-  fetchMock.mock('/api/cards', {
+  fetchMock.mock("/api/cards", {
     status: 200,
     body: allCards,
   });

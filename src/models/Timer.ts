@@ -6,7 +6,7 @@ export default class Timer {
   onIntervalCBs: Function[];
   onElixirCBs: Function[];
   running: boolean;
-  constructor(){
+  constructor() {
     this.oneElixirTime = 2800;
     this.intervalTime = 70;
     this.timer = null;
@@ -16,30 +16,30 @@ export default class Timer {
     this.running = false;
   }
 
-  start(): void{
+  start(): void {
     clearInterval(this.timer);
     this.timer = setInterval(() => {
       this.timePassed += this.intervalTime;
 
-      if(this.timePassed >= this.oneElixirTime){
+      if (this.timePassed >= this.oneElixirTime) {
         this.timePassed = 0;
         this.onElixir();
         this.onInterval();
-      }else{
+      } else {
         this.onInterval();
       }
     }, this.intervalTime);
     this.running = true;
   }
 
-  stop(){
+  stop() {
     clearInterval(this.timer);
     this.timePassed = 0;
     this.running = false;
   }
 
-  private setSpeed(oneElixirTime: number){
-    if(this.oneElixirTime !== oneElixirTime){
+  private setSpeed(oneElixirTime: number) {
+    if (this.oneElixirTime !== oneElixirTime) {
       this.oneElixirTime = oneElixirTime;
       this.start();
     }
@@ -47,29 +47,29 @@ export default class Timer {
 
   singleSpeed = (): void => {
     this.setSpeed(2800);
-  }
+  };
 
   doubleSpeed = (): void => {
     this.setSpeed(1400);
-  }
+  };
 
   tripleSpeed = (): void => {
     this.setSpeed(700);
-  }
+  };
 
   registerOnInterval = (cb: Function) => {
     this.onIntervalCBs.push(cb);
-  }
+  };
 
   private onInterval = () => {
-    this.onIntervalCBs.forEach(cb => cb(this.timePassed, this.oneElixirTime));
-  }
+    this.onIntervalCBs.forEach((cb) => cb(this.timePassed, this.oneElixirTime));
+  };
 
   registerOnElixir = (cb: Function) => {
     this.onElixirCBs.push(cb);
-  }
+  };
 
-  private onElixir(){
-    this.onElixirCBs.forEach(cb => cb());
+  private onElixir() {
+    this.onElixirCBs.forEach((cb) => cb());
   }
 }

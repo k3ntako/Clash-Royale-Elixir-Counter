@@ -1,21 +1,21 @@
-import fs from 'fs';
-import path from 'path';
-import { ICardInfoResponse } from '../../server/types/interfaces';
+import fs from "fs";
+import path from "path";
+import { ICardInfoResponse } from "../../server/types/interfaces";
 
-const cardsFileDir = path.join(__dirname, 'preset_test_cards.json');
-const cardsStr: string = fs.readFileSync(cardsFileDir, 'utf8');
+const cardsFileDir = path.join(__dirname, "preset_test_cards.json");
+const cardsStr: string = fs.readFileSync(cardsFileDir, "utf8");
 
 export const allCards: ICardInfoResponse[] = JSON.parse(cardsStr);
 
-export const cardNames: string[] = allCards.map(card => card.name);
+export const cardNames: string[] = allCards.map((card) => card.name);
 
 export const getCardByKey = (key: string): ICardInfoResponse => {
   const parsedKey = key.trim().toLowerCase();
-  return allCards.find(card => card.key.toLowerCase() === parsedKey);
-}
+  return allCards.find((card) => card.key.toLowerCase() === parsedKey);
+};
 
 export const firstFifteenCards = allCards.slice(0, 15);
-export const firstFifteenCardNames = firstFifteenCards.map(card => card.name);
+export const firstFifteenCardNames = firstFifteenCards.map((card) => card.name);
 
 // Card totals by alphabet (updated 12/7/2019)
 // {

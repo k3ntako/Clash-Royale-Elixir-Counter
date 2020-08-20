@@ -1,8 +1,8 @@
-const fs = require('fs');
-const config = require('../../config');
+const fs = require("fs");
+const config = require("../../config");
 const cardsFolderDir = config.cardsFolderDir;
 const cardsFileDir = config.cardsFileDir;
-const fetch = require('node-fetch');
+const fetch = require("node-fetch");
 
 // interface ICardInfoResponse {
 //   key: string,
@@ -15,7 +15,8 @@ const fetch = require('node-fetch');
 //   id: number,
 // }
 
-const writeCardsFile = async (outputStr) => {// : string, : Promise<void>
+const writeCardsFile = async (outputStr) => {
+  // : string, : Promise<void>
   if (!fs.existsSync(cardsFolderDir)) {
     fs.mkdirSync(cardsFolderDir);
   }
@@ -23,7 +24,8 @@ const writeCardsFile = async (outputStr) => {// : string, : Promise<void>
   fs.writeFileSync(cardsFileDir, outputStr);
 };
 
-const readCardsFile = () => {//: ICardInfoResponse[] | null
+const readCardsFile = () => {
+  //: ICardInfoResponse[] | null
   try {
     const data = fs.readFileSync(cardsFileDir, "utf8");
 
@@ -34,10 +36,11 @@ const readCardsFile = () => {//: ICardInfoResponse[] | null
   }
 };
 
-const get = async (url, options = {}) => { //: Promise<ICardInfoResponse[]>
+const get = async (url, options = {}) => {
+  //: Promise<ICardInfoResponse[]>
   try {
     // Options
-    const defaultOptions = { method: 'GET' };
+    const defaultOptions = { method: "GET" };
     options = Object.assign(defaultOptions, options);
 
     const response = await fetch(url, options);
@@ -45,11 +48,10 @@ const get = async (url, options = {}) => { //: Promise<ICardInfoResponse[]>
   } catch (err) {
     throw new Error(err);
   }
-
 };
 
 module.exports = {
   writeCardsFile,
   readCardsFile,
   get,
-}
+};

@@ -7,6 +7,6 @@ export const get = async (url, options = {}) => {
 
     return await response.json();
   } catch (error) {
-    throw new Error(error)
+    throw new Error(error);
   }
-}
+};

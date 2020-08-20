@@ -1,5 +1,5 @@
-import { ICardInfoResponse } from '../utilities/interfaces';
-import { get } from '../utilities/fetchUtils';
+import { ICardInfoResponse } from "../utilities/interfaces";
+import { get } from "../utilities/fetchUtils";
 
 export default class Cards {
   cards: ICardInfoResponse[];
@@ -9,8 +9,8 @@ export default class Cards {
     this.cardNames = cardNames;
   }
 
-  static async initialize(){
-    try{
+  static async initialize() {
+    try {
       const [cards, cardNames] = await Cards.all();
 
       return new Cards(cards, cardNames);
@@ -19,15 +19,15 @@ export default class Cards {
     }
   }
 
-  static async all() : Promise<[ ICardInfoResponse[], string[] ]>{
-    try{
-      const cards = await get('/api/cards');
+  static async all(): Promise<[ICardInfoResponse[], string[]]> {
+    try {
+      const cards = await get("/api/cards");
 
-      if( !cards || !cards.length){
+      if (!cards || !cards.length) {
         throw new Error("No cards received!");
       }
 
-      const cardNames = cards.map(card => card.name).sort();
+      const cardNames = cards.map((card) => card.name).sort();
 
       return [cards, cardNames];
     } catch (err) {
@@ -41,29 +41,29 @@ export default class Cards {
 
     const periodRegex = /\./gi;
     return outputName.replace(periodRegex, "").toLowerCase();
-  }
+  };
 
   static nameFromKey = (key): string => {
-    if(key === 'x-bow') return 'X-Bow'; // X-Bow is the only name with hyphen
+    if (key === "x-bow") return "X-Bow"; // X-Bow is the only name with hyphen
 
-    const nameArr = key.split("-").map(word => {
+    const nameArr = key.split("-").map((word) => {
       let name = word.charAt(0).toUpperCase() + word.slice(1);
-      name = name.replace('Pekka', 'P.E.K.K.A'); // the PEKKA and Mini PEKKA are the only ones with periods
+      name = name.replace("Pekka", "P.E.K.K.A"); // the PEKKA and Mini PEKKA are the only ones with periods
       return name;
     });
 
     return nameArr.join(" ");
-  }
+  };
 
   getCardByKey = (key) => {
-    if (!this.cards.length){
-      throw new Error('Cards not loaded');
+    if (!this.cards.length) {
+      throw new Error("Cards not loaded");
     }
 
     if (!key) {
-      throw new Error('No ID provided');
+      throw new Error("No ID provided");
     }
 
-    return this.cards.find(card => card.key === key);
-  }
+    return this.cards.find((card) => card.key === key);
+  };
 }

@@ -1,4 +1,4 @@
-import Cards from '../models/Cards';
+import Cards from "../models/Cards";
 
 export default class CR_Card extends HTMLElement {
   cardName: string;
@@ -7,7 +7,7 @@ export default class CR_Card extends HTMLElement {
     super();
   }
 
-  connectedCallback(){
+  connectedCallback() {
     this.cardName = this.innerText;
     this.innerText = "";
     this.render();
@@ -15,13 +15,15 @@ export default class CR_Card extends HTMLElement {
 
   render() {
     const div = document.createElement("div");
-    div.className = 'cr-card'
+    div.className = "cr-card";
 
-    let img = document.createElement("img")
-    img.src = `https://royaleapi.github.io/cr-api-assets/cards-75/${Cards.keyFromName(this.cardName)}.png`
+    let img = document.createElement("img");
+    img.src = `https://royaleapi.github.io/cr-api-assets/cards-75/${Cards.keyFromName(
+      this.cardName
+    )}.png`;
     div.appendChild(img);
 
-    let span = document.createElement('span');
+    let span = document.createElement("span");
     span.innerText = this.cardName;
     div.appendChild(span);
 

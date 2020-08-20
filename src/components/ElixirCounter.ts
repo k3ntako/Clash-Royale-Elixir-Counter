@@ -1,5 +1,4 @@
-import Game from '../models/Game';
-
+import Game from "../models/Game";
 
 export default class ElixirCounter extends HTMLElement {
   game: Game; // set by parent
@@ -7,8 +6,8 @@ export default class ElixirCounter extends HTMLElement {
     super();
   }
 
-  connectedCallback(){
-    if(!this.game){
+  connectedCallback() {
+    if (!this.game) {
       throw new Error("No game assigned to this.game");
     }
 
@@ -20,55 +19,64 @@ export default class ElixirCounter extends HTMLElement {
   onChange = (elixir) => {
     const h3 = this.querySelector("h3");
     h3.innerText = String(elixir);
-  }
+  };
 
-  onButtonChange = (speed: number) => { // speed is 1, 2, or 3 (representing 1x, 2x, or 3x)
+  onButtonChange = (speed: number) => {
+    // speed is 1, 2, or 3 (representing 1x, 2x, or 3x)
     const speedIdx = speed - 1;
 
     // find active button and remove "active" className
-    let activeButton = this.querySelector('button.active');
+    let activeButton = this.querySelector("button.active");
     activeButton.className = "";
 
     // find all buttons and add "active" className to the one that was clicked
-    const buttons = this.querySelectorAll('.speed-buttons button');
+    const buttons = this.querySelectorAll(".speed-buttons button");
     const button = buttons[speedIdx];
     button.className = "active";
 
     // choose the appropriate function based on speed
-    const changeSpeedFunc = [this.game.singleSpeed, this.game.doubleSpeed, this.game.tripleSpeed][speedIdx];
+    const changeSpeedFunc = [
+      this.game.singleSpeed,
+      this.game.doubleSpeed,
+      this.game.tripleSpeed,
+    ][speedIdx];
     changeSpeedFunc();
-  }
+  };
 
-  onIntervalChange = (elixir: number, timePassed: number, oneElixirTime: number) => {
-    const buttons = this.querySelectorAll('.elixir-setter-buttons button');
+  onIntervalChange = (
+    elixir: number,
+    timePassed: number,
+    oneElixirTime: number
+  ) => {
+    const buttons = this.querySelectorAll(".elixir-setter-buttons button");
     buttons.forEach((button, idx) => {
-      const oldFill = button.querySelector('div');
-      oldFill && button.removeChild(oldFill)
+      const oldFill = button.querySelector("div");
+      oldFill && button.removeChild(oldFill);
 
-      if( idx <= elixir ){
+      if (idx <= elixir) {
         button.className = "filled";
       } else if (idx === elixir + 1) {
         button.className = "partially-filled";
 
-        const fill = document.createElement('div');
-        fill.className = 'fill';
-        fill.style.width = `${timePassed/oneElixirTime * 100}%`;
+        const fill = document.createElement("div");
+        fill.className = "fill";
+        fill.style.width = `${(timePassed / oneElixirTime) * 100}%`;
 
         button.append(fill);
       } else {
         button.className = "";
       }
     });
-  }
+  };
 
   render() {
     const div = document.createElement("div");
-    div.className = "elixirCounter"
+    div.className = "elixirCounter";
 
     // buttons to manually set elixir count
     const buttonsDiv = document.createElement("div");
     buttonsDiv.className = "buttons elixir-setter-buttons";
-    for (let i = 0; i <= 10; i++){
+    for (let i = 0; i <= 10; i++) {
       const button = document.createElement("button");
       button.innerText = String(i);
       button.onclick = () => this.game.manualSetElixir(i);
@@ -78,10 +86,10 @@ export default class ElixirCounter extends HTMLElement {
     // speed buttons
     const speedsDiv = document.createElement("div");
     speedsDiv.className = "buttons speed-buttons";
-    for (let i = 1; i <= 3; i++ ){
+    for (let i = 1; i <= 3; i++) {
       const button = document.createElement("button");
-      i === 1 && (button.className = 'active'); // first button has className "active"
-      button.innerText = String(i) + 'x';
+      i === 1 && (button.className = "active"); // first button has className "active"
+      button.innerText = String(i) + "x";
       button.onclick = () => this.onButtonChange(i);
       speedsDiv.appendChild(button);
     }
@@ -91,7 +99,6 @@ export default class ElixirCounter extends HTMLElement {
     buttonsWrapperDiv.append(buttonsDiv);
     buttonsWrapperDiv.append(speedsDiv);
     div.append(buttonsWrapperDiv);
-
 
     const h3 = document.createElement("h3");
     h3.id = "elixirCount";
