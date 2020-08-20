@@ -61,7 +61,7 @@ export default class Timer {
     this.onIntervalCBs.push(cb);
   };
 
-  private onInterval = () => {
+  onInterval = () => {
     this.onIntervalCBs.forEach((cb) => cb(this.timePassed, this.oneElixirTime));
   };
 
@@ -69,7 +69,7 @@ export default class Timer {
     this.onElixirCBs.push(cb);
   };
 
-  private onElixir() {
+  onElixir() {
     this.onElixirCBs.forEach((cb) => cb());
   }
 }

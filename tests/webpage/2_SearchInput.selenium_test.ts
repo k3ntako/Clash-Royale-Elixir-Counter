@@ -1,4 +1,5 @@
 const { By } = require("selenium-webdriver");
+import { driver, findShadowRootElement } from "./0_Setup.selenium_test";
 import { assert } from "chai";
 import HomePage from "../../src";
 

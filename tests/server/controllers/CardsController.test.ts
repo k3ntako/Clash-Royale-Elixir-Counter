@@ -3,7 +3,7 @@ import sinon from "sinon";
 import fs from "fs";
 import { firstFifteenCards } from "../../_test_utilities/_cards.utils";
 
-import CardsController from "../../../server/controllers/CardsController";
+const { all } = require("../../../server/controllers/CardsController");
 import cardsUtils from "../../../server/utilities/cardsUtils";
 
 import config from "../../../config";
