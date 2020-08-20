@@ -3,21 +3,24 @@ import { assert } from "chai";
 import sinon from "sinon";
 import { allCards } from "../_test_utilities/_cards.utils";
 import Timer from "../../src/models/Timer";
+import ElixirTracker from "../../src/models/ElixirTracker";
 
 describe("Game class", (): void => {
   describe("#start", (): void => {
     it("should add one elixir every 2.8 seconds when start is called", (done: Mocha.Done) => {
-      Game.initialize()
+      const elixirTracker = new ElixirTracker();
+
+      Game.initialize(elixirTracker)
         .then((game) => {
           game.start();
           return game;
         })
         .then((game) => {
           setTimeout((): void => {
-            assert.strictEqual(game.elixir, 6);
+            assert.strictEqual(elixirTracker.get(), 6);
 
             setTimeout((): void => {
-              assert.strictEqual(game.elixir, 7);
+              assert.strictEqual(elixirTracker.get(), 7);
               game.stop();
               done();
             }, 4000);
@@ -28,7 +31,9 @@ describe("Game class", (): void => {
 
   describe("#registerOnElixirChange", () => {
     it("should take a callback that is called when elixir count changes", (done: Mocha.Done) => {
-      Game.initialize()
+      const elixirTracker = new ElixirTracker();
+
+      Game.initialize(elixirTracker)
         .then((game) => {
           game.start();
           return game;
@@ -57,7 +62,9 @@ describe("Game class", (): void => {
     it("should stop the timer and sets game.timer to a instance of Timer", async (): Promise<
       void
     > => {
-      const game = await Game.initialize();
+      const elixirTracker = new ElixirTracker();
+
+      const game = await Game.initialize(elixirTracker);
       game.start();
       game.stop();
 
@@ -65,7 +72,9 @@ describe("Game class", (): void => {
     });
 
     it("should prevent #addElixir from being called", (done): void => {
-      Game.initialize().then((game) => {
+      const elixirTracker = new ElixirTracker();
+
+      Game.initialize(elixirTracker).then((game) => {
         game.start();
         game.stop();
 
@@ -87,7 +96,9 @@ describe("Game class", (): void => {
     it("should call functions that were registered", async (): Promise<
       void
     > => {
-      const game = await Game.initialize();
+      const elixirTracker = new ElixirTracker();
+
+      const game = await Game.initialize(elixirTracker);
       const onPlayedCardsChangedSpy1 = sinon.spy();
       const onPlayedCardsChangedSpy2 = sinon.spy();
       game.registerOnPlayedCardsChanged(onPlayedCardsChangedSpy1);
@@ -95,17 +106,24 @@ describe("Game class", (): void => {
 
       assert.lengthOf(game.onPlayedCardsChangedCBs, 2);
 
-      game.setElixir(10);
-      game.playCard(allCards[3].key);
+      elixirTracker.set(10);
+
+      let onErrCalled = false;
+      game.playCard(allCards[3].key, () => {
+        onErrCalled = true;
+      });
 
       sinon.assert.calledOnce(onPlayedCardsChangedSpy1);
       sinon.assert.calledOnce(onPlayedCardsChangedSpy2);
+      assert.isFalse(onErrCalled);
     });
   });
 
   describe("#doubleSpeed", (): void => {
     it("should add one elixir every 1.4 seconds when start is called", (done: Mocha.Done) => {
-      Game.initialize()
+      const elixirTracker = new ElixirTracker();
+
+      Game.initialize(elixirTracker)
         .then((game) => {
           game.start();
           game.doubleSpeed();
@@ -113,10 +131,10 @@ describe("Game class", (): void => {
         })
         .then((game) => {
           setTimeout((): void => {
-            assert.strictEqual(game.elixir, 6);
+            assert.strictEqual(elixirTracker.get(), 6);
 
             setTimeout((): void => {
-              assert.strictEqual(game.elixir, 7);
+              assert.strictEqual(elixirTracker.get(), 7);
               game.stop();
               done();
             }, 1500);

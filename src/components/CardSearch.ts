@@ -55,7 +55,7 @@ export default class CardSearch extends HTMLElement {
       homePage.shadowRoot.append(errorDiv);
 
       // Shake elixir count and turn it red
-      const elixirCount: Element = homePage.shadowRoot.querySelector(
+      const elixirCount: HTMLElement = homePage.shadowRoot.querySelector(
         "#elixirCount"
       );
       elixirCount.style.color = "#ff1111";

@@ -4,6 +4,7 @@ import PlayedCards from "./components/PlayedCards";
 import CR_Card from "./components/CR_Card";
 import Game from "./models/Game";
 import css from "./css";
+import ElixirTracker from "./models/ElixirTracker";
 
 window.customElements.define("card-search", CardSearch);
 window.customElements.define("elixir-counter", ElixirCounter);
@@ -22,7 +23,7 @@ export default class HomePage extends HTMLElement {
   }
 
   async connectedCallback() {
-    this.game = await Game.initialize();
+    this.game = await Game.initialize(new ElixirTracker());
     this.game.start();
 
     this.render();

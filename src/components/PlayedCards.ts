@@ -13,7 +13,7 @@ export default class PlayedCard extends HTMLElement {
   }
 
   onCardClick = (cardName) => {
-    this.game.playCard(Cards.keyFromName(cardName));
+    this.game.playCard(Cards.keyFromName(cardName), console.error);
   };
 
   render() {

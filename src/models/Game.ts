@@ -1,24 +1,24 @@
 import Cards from "./Cards";
 import Timer from "./Timer";
+import ElixirTracker from "./ElixirTracker";
 export default class Game {
-  elixir: number;
   timer: Timer;
   cards: Cards;
   playedCards: string[];
   onElixirChangedCBs: Function[];
   onPlayedCardsChangedCBs: Function[];
   onIntervalChangedCBs: Function[];
-  intervalLength: number;
   singleSpeed: Function;
   doubleSpeed: Function;
   tripleSpeed: Function;
-  constructor(cards) {
+  private elixirTracker: ElixirTracker;
+
+  constructor(cards: Cards, elixirTracker: ElixirTracker) {
     const timer = new Timer();
     timer.registerOnElixir(this.onElixir);
     timer.registerOnInterval(this.onInterval);
 
     this.timer = timer;
-    this.elixir = 5; // opponent's elixir count
     this.cards = cards; // Cards class
     this.playedCards = [];
     this.onPlayedCardsChangedCBs = [];
@@ -28,11 +28,17 @@ export default class Game {
     this.singleSpeed = this.timer.singleSpeed;
     this.doubleSpeed = this.timer.doubleSpeed;
     this.tripleSpeed = this.timer.tripleSpeed;
+
+    this.elixirTracker = elixirTracker;
   }
 
-  static async initialize(): Promise<Game> {
+  static async initialize(elixirTracker: ElixirTracker): Promise<Game> {
     const cards = await Cards.initialize();
-    return new Game(cards);
+    return new Game(cards, elixirTracker);
+  }
+
+  get elixir(): number {
+    return this.elixirTracker.get();
   }
 
   // Timers
@@ -41,7 +47,7 @@ export default class Game {
   };
 
   onInterval = (timePassed: number, oneElixirTime: number) => {
-    this.onIntervalChanged(this.elixir, timePassed, oneElixirTime);
+    this.onIntervalChanged(this.elixirTracker.get(), timePassed, oneElixirTime);
   };
 
   start(): void {
@@ -61,7 +67,7 @@ export default class Game {
       this.start();
     }
 
-    this.elixir = elixir;
+    this.elixirTracker.set(elixir);
     this.onElixirChanged(elixir);
   };
 
@@ -75,34 +81,22 @@ export default class Game {
     } else if (elixir === 10) {
       // if user selects 10, the onChange functions are not called because they are triggered by the timer.
       // this manually triggers the onChange function once
-      this.onElixirChanged(this.elixir);
-      this.onIntervalChanged(this.elixir, 0, this.timer.oneElixirTime);
+      this.onElixirChanged(elixir);
+      this.onIntervalChanged(
+        this.elixirTracker.get(),
+        0,
+        this.timer.oneElixirTime
+      );
     }
   };
 
   private addElixir = (elixir: number): void => {
-    if (typeof elixir !== "number")
-      throw new Error("Elixir has to be a number");
-
-    const newElixir: number = this.elixir + elixir;
-
-    if (newElixir > 10) {
-      // 10+
-      this.setElixir(10);
-      throw new Error("Elixir cannot be set to greater than 10");
-    } else if (newElixir >= 0) {
-      // 0 to 10
-      this.setElixir(newElixir);
-    } else {
-      // less than 0
-      // if less than 0, don't do anything
-      throw new Error("Not enough elixir");
-    }
+    this.setElixir(this.elixirTracker.get() + elixir);
   };
 
-  private subtractElixir(elixir: number): void {
+  private subtractElixir = (elixir: number): void => {
     this.addElixir(-1 * elixir);
-  }
+  };
 
   registerOnElixirChange(onElixirChange: Function): void {
     this.onElixirChangedCBs.push(onElixirChange);
@@ -127,7 +121,7 @@ export default class Game {
   }
 
   // Cards
-  registerOnPlayedCardsChanged(cb) {
+  registerOnPlayedCardsChanged(cb: Function) {
     this.onPlayedCardsChangedCBs.push(cb);
   }
 
