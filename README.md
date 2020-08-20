@@ -4,6 +4,10 @@
 
 This was built using TDD and Typescript, and without heavy frameworks such as React and Vue. Mocha, Chai, and Selenium were used to test this program. I was inspired by this [article](https://blog.bitsrc.io/can-you-build-web-apps-in-2019-without-a-framework-1065ad82b79f) to build a website and limit the number of libraries outside of testing and Typescript.
 
+## API Was Discontinued
+
+In March of 2020, RoyaleAPI [discontinued the API](https://royaleapi.com/blog/sunset-api) necessary for this program. This program will unfortunately no longer work.
+
 ## Getting Started
 
 1. Clone repository
