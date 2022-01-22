@@ -21,7 +21,7 @@
     "concurrently": "^5.0.0",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "node-fetch": "^2.6.0",
+    "node-fetch": "^3.1.1",
     "sinon": "^7.5.0",
     "ts-loader": "^6.2.1",
     "wait-port": "^0.2.6"
